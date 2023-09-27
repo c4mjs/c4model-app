@@ -1,0 +1,46 @@
+{
+	"name": "c4model-app",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"preview": "vite preview",
+		"format": "biome format --write ./src && biome lint --apply-unsafe ./src && biome check --apply-unsafe ./src"
+	},
+	"dependencies": {
+		"@mantine/code-highlight": "^7.0.2",
+		"@mantine/core": "^7.0.2",
+		"@mantine/dates": "^7.0.2",
+		"@mantine/dropzone": "^7.0.2",
+		"@mantine/form": "^7.0.2",
+		"@mantine/hooks": "^7.0.2",
+		"@mantine/modals": "^7.0.2",
+		"@mantine/notifications": "^7.0.2",
+		"@mantine/spotlight": "^7.0.2",
+		"dayjs": "^1.11.10",
+		"eventemitter2": "^6.4.9",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0",
+		"react-icons": "^4.11.0",
+		"react-use": "^17.4.0",
+		"reactflow": "^11.9.2",
+		"rxdb": "^14.17.1",
+		"rxjs": "^7.8.1",
+		"swagger-ui-react": "^5.7.2"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.2.2",
+		"@types/react": "^18.0.28",
+		"@types/react-dom": "^18.0.11",
+		"@typescript-eslint/eslint-plugin": "^5.57.1",
+		"@typescript-eslint/parser": "^5.57.1",
+		"@vitejs/plugin-react": "^4.0.0",
+		"eslint": "^8.38.0",
+		"eslint-plugin-react-hooks": "^4.6.0",
+		"eslint-plugin-react-refresh": "^0.3.4",
+		"typescript": "^5.0.2",
+		"vite": "^4.3.2"
+	}
+}
