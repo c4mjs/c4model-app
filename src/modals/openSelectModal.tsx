@@ -1,6 +1,13 @@
-import { Button, Group, Select, SelectProps, Stack } from "@mantine/core";
+import {
+	Button,
+	Group,
+	ModalProps,
+	Select,
+	SelectProps,
+	Stack,
+} from "@mantine/core";
 import { modals } from "@mantine/modals";
-import { ModalSettings } from "@mantine/modals/lib/context";
+import { omit } from "lodash";
 import { FC, useState } from "react";
 
 type ManagedSelectProps = {
@@ -13,13 +20,19 @@ const ManagedSelect: FC<ManagedSelectProps> = ({
 	onConfirm,
 	onCancel,
 }) => {
-	const [value, setValue] = useState<string | null>(selectProps.defaultValue);
+	const [value, setValue] = useState<string>(selectProps.defaultValue || "");
 
 	return (
 		<Stack>
-			<Select onChange={(v) => setValue(v)} value={value} {...selectProps} />
+			<Select
+				onChange={(v) => v && setValue(v)}
+				value={value}
+				{...selectProps}
+			/>
 			<Group align={"end"} justify={"right"}>
-				<Button onClick={onCancel}>Cancel</Button>
+				<Button onClick={onCancel} variant={"outline"}>
+					Cancel
+				</Button>
 				<Button
 					disabled={!value}
 					onClick={() => value && onConfirm(value)}
@@ -32,17 +45,17 @@ const ManagedSelect: FC<ManagedSelectProps> = ({
 	);
 };
 
-export type OpenSelectModalProps = ModalSettings & {
+export type OpenSelectModalProps = Partial<Omit<ModalProps, "opened">> & {
 	onCancel: () => void;
 	onConfirm: (value: string) => void;
 	selectProps: SelectProps;
 };
 export const openSelectModal = (props: OpenSelectModalProps) =>
 	modals.open({
-		...props,
+		...omit(props, "selectProps", "onConfirm", "onCancel"),
 		children: (
 			<>
-				{...(props.children || [])}
+				{props.children && props.children}
 				<ManagedSelect
 					onCancel={props.onCancel}
 					onConfirm={props.onConfirm}

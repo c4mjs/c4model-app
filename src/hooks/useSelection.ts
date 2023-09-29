@@ -1,7 +1,14 @@
 import { useObservable } from "react-use";
 import { BehaviorSubject } from "rxjs";
+import {
+	ContainerEntity,
+	GroupEntity,
+	SystemEntity,
+} from "../workspaces/workspace-db.ts";
 
-const selection$ = new BehaviorSubject(undefined);
+const selection$ = new BehaviorSubject<
+	GroupEntity | SystemEntity | ContainerEntity | undefined
+>(undefined);
 
 export const select = (it: any) => selection$.next(it);
 

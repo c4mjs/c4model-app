@@ -6,9 +6,27 @@ import {
 	Tooltip,
 	useMantineColorScheme,
 } from "@mantine/core";
-import React from "react";
+import React, { FC } from "react";
 import { MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
 import { VscThreeBars } from "react-icons/vsc";
+import { match } from "ts-pattern";
+
+type MenuPart = {
+	id: string;
+	type: "item" | "divider";
+	label?: string;
+	onClick?: () => void;
+};
+
+const GetMenuPart: FC<{ part: MenuPart }> = ({ part }) =>
+	match(part.type)
+		.with("item", () => (
+			<Menu.Item key={part.id} onClick={part.onClick}>
+				{part.label}
+			</Menu.Item>
+		))
+		.with("divider", () => <Menu.Divider key={part.id} />)
+		.run();
 
 export type AppHeaderProps = {
 	onNew: () => void;
@@ -24,17 +42,18 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
 }) => {
 	const { toggleColorScheme, colorScheme } = useMantineColorScheme();
 
-	const menu = [
-		{ type: "item", label: "New", onClick: onNew },
-		{ type: "item", label: "Open", onClick: onOpen },
-		{ type: "divider" },
-		{ type: "item", label: "Save", onClick: onSave },
-		{ type: "divider" },
-		{ type: "item", label: "Close", onClick: onClose },
+	const menu: MenuPart[] = [
+		{ id: "menu_a", type: "item", label: "New", onClick: onNew },
+		{ id: "menu_b", type: "item", label: "Open", onClick: onOpen },
+		{ id: "menu_c", type: "divider" },
+		{ id: "menu_d", type: "item", label: "Save", onClick: onSave },
+		{ id: "menu_e", type: "divider" },
+		{ id: "menu_f", type: "item", label: "Close", onClick: onClose },
 	];
 
 	const actions = [
 		{
+			id: "action_a",
 			onClick: toggleColorScheme,
 			icon: colorScheme === "dark" ? MdOutlineLightMode : MdOutlineDarkMode,
 			tooltip: "Toggle Theme",
@@ -58,22 +77,16 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
 						</ActionIcon>
 					</Menu.Target>
 					<Menu.Dropdown>
-						{menu.map((it) => (
-							<>
-								{it.type === "item" && (
-									<Menu.Item onClick={it.onClick}>{it.label}</Menu.Item>
-								)}
-								{it.type === "divider" && <Menu.Divider />}
-							</>
-						))}
+						{menu.map((part) => GetMenuPart({ part }))}
 					</Menu.Dropdown>
 				</Menu>
 				<Title order={3}>C4Model.App</Title>
 			</Group>
 			<Group>
 				{actions.map((it) => (
-					<Tooltip label={it.tooltip}>
+					<Tooltip key={it.id} label={it.tooltip} openDelay={500}>
 						<ActionIcon
+							key={it.id}
 							variant={"default"}
 							size={"lg"}
 							radius={"md"}

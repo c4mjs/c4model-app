@@ -21,6 +21,7 @@
 		"@mantine/spotlight": "^7.0.2",
 		"dayjs": "^1.11.10",
 		"eventemitter2": "^6.4.9",
+		"lodash": "^4.17.21",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"react-icons": "^4.11.0",
@@ -28,10 +29,14 @@
 		"reactflow": "^11.9.2",
 		"rxdb": "^14.17.1",
 		"rxjs": "^7.8.1",
-		"swagger-ui-react": "^5.7.2"
+		"swagger-ui-react": "^5.7.2",
+		"ts-pattern": "^5.0.5",
+		"zod": "^3.22.2",
+		"zod-to-json-schema": "^3.21.4"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.2.2",
+		"@types/lodash": "^4.14.199",
 		"@types/react": "^18.0.28",
 		"@types/react-dom": "^18.0.11",
 		"@typescript-eslint/eslint-plugin": "^5.57.1",

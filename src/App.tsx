@@ -5,15 +5,20 @@ import {
 	Modal,
 	Select,
 	Stack,
+	Text,
 	Title,
 	noop,
 } from "@mantine/core";
+import { match } from "ts-pattern";
 import { AppHeader } from "./AppHeader.tsx";
 import { AppNavbar } from "./AppNavbar.tsx";
-import { SelectionDrawer } from "./containers/SelectionDrawer.tsx";
+import { useSelection } from "./hooks/useSelection.ts";
 import { useWorkspaceAdapter } from "./hooks/useWorkspaceAdapter.ts";
+import { ContainerPage } from "./pages/ContainerPage.tsx";
+import { GroupPage } from "./pages/GroupPage.tsx";
+import { SystemPage } from "./pages/SystemPage.tsx";
 import { WorkspaceAdapterType } from "./workspaces/workspace-adapter.ts";
-import { C4DbProvider } from "./workspaces/workspace-db.ts";
+import { WorkspaceProvider } from "./workspaces/workspace-db.ts";
 
 export const App = () => {
 	const {
@@ -26,21 +31,23 @@ export const App = () => {
 		setAdapter,
 	} = useWorkspaceAdapter();
 
+	const selection = useSelection();
+
 	return (
 		<AppShell
-			styles={{ root: { height: "100vh" } }}
+			styles={{
+				root: { height: "100vh" },
+				header: { display: "flex" },
+				navbar: { display: "flex", flex: "auto" },
+			}}
 			header={{ height: 60 }}
 			footer={{ height: 30 }}
 			navbar={{
 				width: 300,
-				breakpoint: "sm",
-			}}
-			aside={{
-				width: 300,
-				breakpoint: "sm",
+				breakpoint: "xs",
 			}}
 		>
-			<Modal centered opened={!adapter} onClose={noop} withCloseButton={false}>
+			<Modal opened={!adapter} onClose={noop} withCloseButton={false}>
 				<Stack>
 					<Title>C4 Model</Title>
 					<Divider />
@@ -64,8 +71,8 @@ export const App = () => {
 				</Stack>
 			</Modal>
 			{adapter && (
-				<C4DbProvider value={adapter.c4db}>
-					<AppShell.Header display={"flex"}>
+				<WorkspaceProvider value={adapter.c4db}>
+					<AppShell.Header>
 						<AppHeader
 							onNew={() => {
 								setAdapter(undefined);
@@ -81,14 +88,18 @@ export const App = () => {
 					<AppShell.Navbar>
 						<AppNavbar />
 					</AppShell.Navbar>
-					<AppShell.Aside />
 
-					<AppShell.Main />
+					<AppShell.Main>
+						{selection &&
+							match(selection.type)
+								.with("group", () => <GroupPage id={selection?.id} />)
+								.with("system", () => <SystemPage id={selection?.id} />)
+								.with("container", () => <ContainerPage id={selection?.id} />)
+								.otherwise(() => <Text>Dashboard...</Text>)}
+					</AppShell.Main>
 
 					<AppShell.Footer />
-
-					<SelectionDrawer />
-				</C4DbProvider>
+				</WorkspaceProvider>
 			)}
 		</AppShell>
 	);

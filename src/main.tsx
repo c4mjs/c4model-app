@@ -1,4 +1,4 @@
-import { MantineProvider } from "@mantine/core";
+import { Button, MantineProvider, Stack, Text } from "@mantine/core";
 import "@mantine/core/styles.css";
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
@@ -12,7 +12,15 @@ import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 	<React.StrictMode>
-		<MantineProvider>
+		<MantineProvider
+			theme={{
+				components: {
+					Text: Text.extend({ defaultProps: { size: "sm" } }),
+					Button: Button.extend({ defaultProps: { size: "sm" } }),
+					Stack: Stack.extend({ defaultProps: { gap: "sm" } }),
+				},
+			}}
+		>
 			<Notifications />
 			<ModalsProvider>
 				<App />

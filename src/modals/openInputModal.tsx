@@ -1,6 +1,13 @@
-import { Button, Group, Input, InputProps, Stack } from "@mantine/core";
+import {
+	Button,
+	Group,
+	Input,
+	InputProps,
+	ModalProps,
+	Stack,
+} from "@mantine/core";
 import { modals } from "@mantine/modals";
-import { ModalSettings } from "@mantine/modals/lib/context";
+import { omit } from "lodash";
 import { FC, useState } from "react";
 
 type ManagedInputProps = {
@@ -23,7 +30,9 @@ const ManagedInput: FC<ManagedInputProps> = ({
 				{...inputProps}
 			/>
 			<Group align={"end"} justify={"right"}>
-				<Button onClick={onCancel}>Cancel</Button>
+				<Button onClick={onCancel} variant={"outline"}>
+					Cancel
+				</Button>
 				<Button
 					disabled={!value}
 					onClick={() => value && onConfirm(value)}
@@ -36,17 +45,17 @@ const ManagedInput: FC<ManagedInputProps> = ({
 	);
 };
 
-export type OpenInputModalProps = ModalSettings & {
+export type OpenInputModalProps = Partial<Omit<ModalProps, "opened">> & {
 	onCancel: () => void;
 	onConfirm: (value: string) => void;
 	inputProps: InputProps;
 };
 export const openInputModal = (props: OpenInputModalProps) =>
 	modals.open({
-		...props,
+		...omit(props, "selectProps", "onConfirm", "onCancel"),
 		children: (
 			<>
-				{...(props.children || [])}
+				{props.children && props.children}
 				<ManagedInput
 					onCancel={props.onCancel}
 					onConfirm={props.onConfirm}
