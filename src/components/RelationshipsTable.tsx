@@ -1,5 +1,6 @@
-import { Select, Table, TextInput } from "@mantine/core";
+import { ActionIcon, Menu, Select, Table, TextInput } from "@mantine/core";
 import { FC } from "react";
+import { VscEllipsis } from "react-icons/vsc";
 import {
 	ContainerEntity,
 	RelationshipEntity,
@@ -12,6 +13,7 @@ export type RelationshipsTableProps = {
 		id: string,
 		changes: Partial<Omit<RelationshipEntity, "id">>,
 	) => void;
+	onRowDelete: (id: string) => void;
 	allContainers: ContainerEntity[];
 	allSystems: SystemEntity[];
 };
@@ -19,6 +21,7 @@ export type RelationshipsTableProps = {
 export const RelationshipsTable: FC<RelationshipsTableProps> = ({
 	relationships,
 	onRowPatch,
+	onRowDelete,
 	allContainers,
 }) => {
 	return (
@@ -29,6 +32,7 @@ export const RelationshipsTable: FC<RelationshipsTableProps> = ({
 					<Table.Th>Receiver</Table.Th>
 					<Table.Th>Description</Table.Th>
 					<Table.Th>Technology</Table.Th>
+					<Table.Th>Actions</Table.Th>
 				</Table.Tr>
 			</Table.Thead>
 			<Table.Tbody>
@@ -85,6 +89,20 @@ export const RelationshipsTable: FC<RelationshipsTableProps> = ({
 									}
 								/>
 							}
+						</Table.Td>
+						<Table.Td>
+							<Menu position="bottom-start" shadow={"md"} width={200}>
+								<Menu.Target>
+									<ActionIcon variant={"subtle"}>
+										<VscEllipsis style={{ transform: "rotate(90deg)" }} />
+									</ActionIcon>
+								</Menu.Target>
+								<Menu.Dropdown>
+									<Menu.Item onClick={() => onRowDelete(relationship.id)}>
+										Delete
+									</Menu.Item>
+								</Menu.Dropdown>
+							</Menu>
 						</Table.Td>
 					</Table.Tr>
 				))}

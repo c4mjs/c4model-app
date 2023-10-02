@@ -83,6 +83,12 @@ export const ContainerPage: FC<{ id: string }> = ({ id }) => {
 										?.getLatest()
 										.patch(update)
 								}
+								onRowDelete={(id) =>
+									relationships
+										.find((it) => it.id === id)
+										?.getLatest()
+										.remove()
+								}
 								allContainers={containers}
 								allSystems={systems}
 							/>

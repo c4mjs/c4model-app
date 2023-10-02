@@ -17,6 +17,7 @@ import { useWorkspaceAdapter } from "./hooks/useWorkspaceAdapter.ts";
 import { ContainerPage } from "./pages/ContainerPage.tsx";
 import { GroupPage } from "./pages/GroupPage.tsx";
 import { SystemPage } from "./pages/SystemPage.tsx";
+import { exportWorkspace, importWorkspace } from "./utils/import_export.tsx";
 import { WorkspaceAdapterType } from "./workspaces/workspace-adapter.ts";
 import { WorkspaceProvider } from "./workspaces/workspace-db.ts";
 
@@ -82,6 +83,8 @@ export const App = () => {
 							onClose={() => {
 								setAdapter(undefined);
 							}}
+							onExport={() => exportWorkspace(adapter)}
+							onImport={() => importWorkspace(adapter)}
 						/>
 					</AppShell.Header>
 

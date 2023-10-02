@@ -32,6 +32,8 @@ export type AppHeaderProps = {
 	onNew: () => void;
 	onOpen: () => void;
 	onSave: () => void;
+	onImport: () => void;
+	onExport: () => void;
 	onClose: () => void;
 };
 export const AppHeader: React.FC<AppHeaderProps> = ({
@@ -39,21 +41,36 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
 	onOpen,
 	onSave,
 	onClose,
+	onImport,
+	onExport,
 }) => {
 	const { toggleColorScheme, colorScheme } = useMantineColorScheme();
 
 	const menu: MenuPart[] = [
-		{ id: "menu_a", type: "item", label: "New", onClick: onNew },
-		{ id: "menu_b", type: "item", label: "Open", onClick: onOpen },
-		{ id: "menu_c", type: "divider" },
-		{ id: "menu_d", type: "item", label: "Save", onClick: onSave },
-		{ id: "menu_e", type: "divider" },
-		{ id: "menu_f", type: "item", label: "Close", onClick: onClose },
+		{ id: crypto.randomUUID(), type: "item", label: "New", onClick: onNew },
+		{ id: crypto.randomUUID(), type: "item", label: "Open", onClick: onOpen },
+		{ id: crypto.randomUUID(), type: "divider" },
+		{ id: crypto.randomUUID(), type: "item", label: "Save", onClick: onSave },
+		{ id: crypto.randomUUID(), type: "divider" },
+		{
+			id: crypto.randomUUID(),
+			type: "item",
+			label: "Import",
+			onClick: onImport,
+		},
+		{
+			id: crypto.randomUUID(),
+			type: "item",
+			label: "Export",
+			onClick: onExport,
+		},
+		{ id: crypto.randomUUID(), type: "divider" },
+		{ id: crypto.randomUUID(), type: "item", label: "Close", onClick: onClose },
 	];
 
 	const actions = [
 		{
-			id: "action_a",
+			id: crypto.randomUUID(),
 			onClick: toggleColorScheme,
 			icon: colorScheme === "dark" ? MdOutlineLightMode : MdOutlineDarkMode,
 			tooltip: "Toggle Theme",
