@@ -5,7 +5,6 @@ import {
 	Modal,
 	Select,
 	Stack,
-	Text,
 	Title,
 	noop,
 } from "@mantine/core";
@@ -15,6 +14,7 @@ import { AppNavbar } from "./AppNavbar.tsx";
 import { useSelection } from "./hooks/useSelection.ts";
 import { useWorkspaceAdapter } from "./hooks/useWorkspaceAdapter.ts";
 import { ContainerPage } from "./pages/ContainerPage.tsx";
+import { ExplorerPage } from "./pages/ExplorerPage.tsx";
 import { GroupPage } from "./pages/GroupPage.tsx";
 import { SystemPage } from "./pages/SystemPage.tsx";
 import { exportWorkspace, importWorkspace } from "./utils/import_export.tsx";
@@ -93,12 +93,12 @@ export const App = () => {
 					</AppShell.Navbar>
 
 					<AppShell.Main>
-						{selection &&
+						{(selection &&
 							match(selection.type)
-								.with("group", () => <GroupPage id={selection?.id} />)
-								.with("system", () => <SystemPage id={selection?.id} />)
-								.with("container", () => <ContainerPage id={selection?.id} />)
-								.otherwise(() => <Text>Dashboard...</Text>)}
+								.with("group", () => <GroupPage id={selection.id} />)
+								.with("system", () => <SystemPage id={selection.id} />)
+								.with("container", () => <ContainerPage id={selection.id} />)
+								.otherwise(() => <ExplorerPage />)) || <ExplorerPage />}
 					</AppShell.Main>
 
 					<AppShell.Footer />

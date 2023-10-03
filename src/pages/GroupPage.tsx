@@ -1,12 +1,12 @@
 import { Container, Stack } from "@mantine/core";
 import { FC } from "react";
-import { VscOrganization } from "react-icons/vsc";
+import { VscCompass, VscOrganization } from "react-icons/vsc";
 import { MyBreadcrumbs } from "../components/MyBreadcrumbs.tsx";
 import { NameAndDescription } from "../components/NameAndDescription.tsx";
 import { SystemsTable } from "../components/SystemsTable.tsx";
 import { TableWrapper } from "../components/TableWrapper.tsx";
 import { useGroup } from "../hooks/useGroup.tsx";
-import { select } from "../hooks/useSelection.ts";
+import { deselect, select } from "../hooks/useSelection.ts";
 
 export const GroupPage: FC<{ id: string }> = ({ id }) => {
 	const { group, systems, remove, addSystem } = useGroup(id);
@@ -16,7 +16,16 @@ export const GroupPage: FC<{ id: string }> = ({ id }) => {
 			<Stack pt={"md"}>
 				{group && (
 					<Stack>
-						<MyBreadcrumbs data={[{ id: group.id, label: group.name }]} />
+						<MyBreadcrumbs
+							data={[
+								{
+									id: "home",
+									label: <VscCompass />,
+									onClick: () => deselect(),
+								},
+								{ id: group.id, label: group.name },
+							]}
+						/>
 						<NameAndDescription
 							id={group.id}
 							defaultName={group.name}

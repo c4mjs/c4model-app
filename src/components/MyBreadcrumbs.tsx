@@ -1,8 +1,8 @@
-import { Anchor, Breadcrumbs } from "@mantine/core";
-import { FC } from "react";
+import { Anchor, Breadcrumbs, Center } from "@mantine/core";
+import { FC, ReactNode } from "react";
 
 export type MyBreadcrumbsProps = {
-	data: { id: string; label: string; onClick?: () => void }[];
+	data: { id: string; label: ReactNode; onClick?: () => void }[];
 };
 
 export const MyBreadcrumbs: FC<MyBreadcrumbsProps> = ({ data }) => {
@@ -10,7 +10,7 @@ export const MyBreadcrumbs: FC<MyBreadcrumbsProps> = ({ data }) => {
 		<Breadcrumbs>
 			{data.map((it) => (
 				<Anchor key={it.id} onClick={it.onClick}>
-					{it.label}
+					<Center>{it.label}</Center>
 				</Anchor>
 			))}
 		</Breadcrumbs>

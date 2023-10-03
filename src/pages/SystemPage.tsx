@@ -2,13 +2,13 @@ import { Button, Container, Group, Stack } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { FC } from "react";
 import { FaShareNodes } from "react-icons/fa6";
-import { VscLayers } from "react-icons/vsc";
+import { VscCompass, VscLayers } from "react-icons/vsc";
 import { ContainersTable } from "../components/ContainersTable.tsx";
 import { MyBreadcrumbs } from "../components/MyBreadcrumbs.tsx";
 import { NameAndDescription } from "../components/NameAndDescription.tsx";
 import { TableWrapper } from "../components/TableWrapper.tsx";
 import { SystemContainerCanvas } from "../containers/SystemContainerCanvas.tsx";
-import { select } from "../hooks/useSelection.ts";
+import { deselect, select } from "../hooks/useSelection.ts";
 import { useSystem } from "../hooks/useSystem.tsx";
 
 export const SystemPage: FC<{ id: string }> = ({ id }) => {
@@ -23,6 +23,11 @@ export const SystemPage: FC<{ id: string }> = ({ id }) => {
 					<Stack>
 						<MyBreadcrumbs
 							data={[
+								{
+									id: "home",
+									label: <VscCompass />,
+									onClick: () => deselect(),
+								},
 								{
 									id: group.id,
 									label: group.name,

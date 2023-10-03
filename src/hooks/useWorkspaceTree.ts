@@ -66,6 +66,7 @@ export const useWorkspaceTree = () => {
 	return {
 		groups,
 		systems,
+		containers,
 		systemsByGroup,
 		containersBySystem,
 		systemInputSelectData,

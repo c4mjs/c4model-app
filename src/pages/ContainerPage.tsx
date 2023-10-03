@@ -1,5 +1,6 @@
 import { Container, Stack } from "@mantine/core";
 import { FC } from "react";
+import { VscCompass } from "react-icons/vsc";
 import { ContainerVariantIcon } from "../components/ContainerVariantIcon.tsx";
 import { ContainerVariantMenu } from "../components/ContainerVariantMenu.tsx";
 import { MyBreadcrumbs } from "../components/MyBreadcrumbs.tsx";
@@ -7,7 +8,7 @@ import { NameAndDescription } from "../components/NameAndDescription.tsx";
 import { RelationshipsTable } from "../components/RelationshipsTable.tsx";
 import { TableWrapper } from "../components/TableWrapper.tsx";
 import { useContainer } from "../hooks/useContainer.tsx";
-import { select } from "../hooks/useSelection.ts";
+import { deselect, select } from "../hooks/useSelection.ts";
 import { useWorkspaceTree } from "../hooks/useWorkspaceTree.ts";
 
 export const ContainerPage: FC<{ id: string }> = ({ id }) => {
@@ -30,6 +31,11 @@ export const ContainerPage: FC<{ id: string }> = ({ id }) => {
 					<Stack>
 						<MyBreadcrumbs
 							data={[
+								{
+									id: "home",
+									label: <VscCompass />,
+									onClick: () => deselect(),
+								},
 								{
 									id: group.id,
 									label: group.name,
