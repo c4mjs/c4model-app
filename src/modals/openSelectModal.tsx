@@ -14,11 +14,13 @@ type ManagedSelectProps = {
 	onCancel: () => void;
 	onConfirm: (value: string) => void;
 	selectProps: SelectProps;
+	labels: { confirm: string; cancel: string };
 };
 const ManagedSelect: FC<ManagedSelectProps> = ({
 	selectProps,
 	onConfirm,
 	onCancel,
+	labels,
 }) => {
 	const [value, setValue] = useState<string>(selectProps.defaultValue || "");
 
@@ -31,14 +33,14 @@ const ManagedSelect: FC<ManagedSelectProps> = ({
 			/>
 			<Group align={"end"} justify={"right"}>
 				<Button onClick={onCancel} variant={"outline"}>
-					Cancel
+					{labels.cancel}
 				</Button>
 				<Button
 					disabled={!value}
 					onClick={() => value && onConfirm(value)}
 					mt="md"
 				>
-					Submit
+					{labels.confirm}
 				</Button>
 			</Group>
 		</Stack>
@@ -49,6 +51,7 @@ export type OpenSelectModalProps = Partial<Omit<ModalProps, "opened">> & {
 	onCancel: () => void;
 	onConfirm: (value: string) => void;
 	selectProps: SelectProps;
+	labels: { confirm: string; cancel: string };
 };
 export const openSelectModal = (props: OpenSelectModalProps) =>
 	modals.open({
@@ -60,6 +63,7 @@ export const openSelectModal = (props: OpenSelectModalProps) =>
 					onCancel={props.onCancel}
 					onConfirm={props.onConfirm}
 					selectProps={props.selectProps}
+					labels={props.labels}
 				/>
 			</>
 		),

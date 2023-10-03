@@ -1,6 +1,5 @@
 import { Container, Stack } from "@mantine/core";
 import { FC } from "react";
-import { useObservable } from "react-use";
 import { ContainerVariantIcon } from "../components/ContainerVariantIcon.tsx";
 import { ContainerVariantMenu } from "../components/ContainerVariantMenu.tsx";
 import { MyBreadcrumbs } from "../components/MyBreadcrumbs.tsx";
@@ -9,11 +8,9 @@ import { RelationshipsTable } from "../components/RelationshipsTable.tsx";
 import { TableWrapper } from "../components/TableWrapper.tsx";
 import { useContainer } from "../hooks/useContainer.tsx";
 import { select } from "../hooks/useSelection.ts";
-import { useWorkspaceDb } from "../workspaces/workspace-db.ts";
+import { useWorkspaceTree } from "../hooks/useWorkspaceTree.ts";
 
 export const ContainerPage: FC<{ id: string }> = ({ id }) => {
-	const db = useWorkspaceDb();
-
 	const {
 		container,
 		system,
@@ -21,10 +18,10 @@ export const ContainerPage: FC<{ id: string }> = ({ id }) => {
 		relationships,
 		addRelationship,
 		removeContainer,
+		moveContainer,
 	} = useContainer(id);
 
-	const containers = useObservable(db.containers.find().$, []);
-	const systems = useObservable(db.systems.find().$, []);
+	const tree = useWorkspaceTree();
 
 	return (
 		<Container>
@@ -61,6 +58,7 @@ export const ContainerPage: FC<{ id: string }> = ({ id }) => {
 								/>
 							}
 							onDelete={removeContainer}
+							onMove={moveContainer}
 							withMenu={
 								<ContainerVariantMenu
 									variant={container.variant}
@@ -89,8 +87,7 @@ export const ContainerPage: FC<{ id: string }> = ({ id }) => {
 										?.getLatest()
 										.remove()
 								}
-								allContainers={containers}
-								allSystems={systems}
+								relationshipOptions={tree.containerInputSelectData}
 							/>
 						</TableWrapper>
 					</Stack>

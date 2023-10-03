@@ -13,7 +13,7 @@ import { useSystem } from "../hooks/useSystem.tsx";
 
 export const SystemPage: FC<{ id: string }> = ({ id }) => {
 	const [contextOpened, context] = useDisclosure(false);
-	const { system, group, removeSystem, containers, addContainer } =
+	const { system, group, removeSystem, moveSystem, containers, addContainer } =
 		useSystem(id);
 
 	return (
@@ -41,6 +41,7 @@ export const SystemPage: FC<{ id: string }> = ({ id }) => {
 							}
 							icon={<VscLayers size={"1.5rem"} />}
 							onDelete={removeSystem}
+							onMove={moveSystem}
 						/>
 
 						<Group>
@@ -50,7 +51,7 @@ export const SystemPage: FC<{ id: string }> = ({ id }) => {
 								variant={"outline"}
 								leftSection={<FaShareNodes />}
 							>
-								View System Context
+								View System Container
 							</Button>
 						</Group>
 

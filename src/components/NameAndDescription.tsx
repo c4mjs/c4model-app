@@ -8,7 +8,8 @@ export type NameAndDescription = {
 	onNameChange: (title: string) => void;
 	onDescriptionChange: (title: string) => void;
 	icon: ReactNode;
-	onDelete: () => void;
+	onDelete?: () => void;
+	onMove?: () => void;
 	withMenu?: ReactNode;
 };
 
@@ -19,6 +20,7 @@ export const NameAndDescription: FC<NameAndDescription> = ({
 	defaultDescription,
 	icon,
 	onDelete,
+	onMove,
 	id,
 	withMenu,
 }) => {
@@ -34,7 +36,8 @@ export const NameAndDescription: FC<NameAndDescription> = ({
 						</Menu.Target>
 						<Menu.Dropdown>
 							{withMenu}
-							<Menu.Item onClick={onDelete}>Delete</Menu.Item>
+							{onMove && <Menu.Item onClick={onMove}>Move</Menu.Item>}
+							{onDelete && <Menu.Item onClick={onDelete}>Delete</Menu.Item>}
 						</Menu.Dropdown>
 					</Menu>
 				}

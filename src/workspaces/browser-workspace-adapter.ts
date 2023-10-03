@@ -86,6 +86,7 @@ export class BrowserWorkspaceAdapter implements WorkspaceAdapter {
 						label: it.name,
 					})),
 				},
+				labels: { confirm: "Open", cancel: "Cancel" },
 				onCancel: reject,
 				onConfirm: resolve,
 			}),

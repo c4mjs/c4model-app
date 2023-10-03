@@ -1,11 +1,14 @@
-import { ActionIcon, Menu, Select, Table, TextInput } from "@mantine/core";
+import {
+	ActionIcon,
+	ComboboxData,
+	Menu,
+	Select,
+	Table,
+	TextInput,
+} from "@mantine/core";
 import { FC } from "react";
 import { VscEllipsis } from "react-icons/vsc";
-import {
-	ContainerEntity,
-	RelationshipEntity,
-	SystemEntity,
-} from "../workspaces/workspace-db.ts";
+import { RelationshipEntity } from "../workspaces/workspace-db.ts";
 
 export type RelationshipsTableProps = {
 	relationships: RelationshipEntity[];
@@ -14,15 +17,14 @@ export type RelationshipsTableProps = {
 		changes: Partial<Omit<RelationshipEntity, "id">>,
 	) => void;
 	onRowDelete: (id: string) => void;
-	allContainers: ContainerEntity[];
-	allSystems: SystemEntity[];
+	relationshipOptions: ComboboxData;
 };
 
 export const RelationshipsTable: FC<RelationshipsTableProps> = ({
 	relationships,
 	onRowPatch,
 	onRowDelete,
-	allContainers,
+	relationshipOptions,
 }) => {
 	return (
 		<Table highlightOnHover>
@@ -43,11 +45,8 @@ export const RelationshipsTable: FC<RelationshipsTableProps> = ({
 								<Select
 									variant={"unstyled"}
 									searchable
-									data={allContainers.map((c) => ({
-										value: c.id,
-										label: c.name,
-									}))}
-									value={relationship.sender}
+									data={relationshipOptions}
+									defaultValue={relationship.sender}
 									onChange={(sender) =>
 										onRowPatch(relationship.id, { sender: sender || "" })
 									}
@@ -58,11 +57,8 @@ export const RelationshipsTable: FC<RelationshipsTableProps> = ({
 							<Select
 								variant={"unstyled"}
 								searchable
-								data={allContainers.map((c) => ({
-									value: c.id,
-									label: c.name,
-								}))}
-								value={relationship.receiver}
+								data={relationshipOptions}
+								defaultValue={relationship.receiver}
 								onChange={(receiver) =>
 									onRowPatch(relationship.id, { receiver: receiver || "" })
 								}
