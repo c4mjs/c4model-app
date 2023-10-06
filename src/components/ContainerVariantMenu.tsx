@@ -1,21 +1,21 @@
 import { Menu, Text } from "@mantine/core";
 import { map } from "lodash";
 import { FC } from "react";
-import { ContainerEntity } from "../workspaces/workspace-db.ts";
+import { WorkspaceContainerVariant } from "../workspace/WorkspaceContainer.ts";
 import { ContainerVariantIcon } from "./ContainerVariantIcon.tsx";
 
 export type ContainerVariantSelectProps = {
-	variant: ContainerEntity["variant"];
-	onChange: (variant: ContainerEntity["variant"]) => void;
+	variant: WorkspaceContainerVariant;
+	onChange: (variant: WorkspaceContainerVariant) => void;
 };
 
-const variantOptions: Record<ContainerEntity["variant"], string> = {
-	default: "Default",
-	data: "Data",
-	microservice: "Microservice",
-	queue: "Queue",
-	browser: "Browser",
-	mobile: "Mobile",
+const variantOptions: Record<WorkspaceContainerVariant, string> = {
+	[WorkspaceContainerVariant.DEFAULT]: "Default",
+	[WorkspaceContainerVariant.DATA]: "Data",
+	[WorkspaceContainerVariant.MICROSERVICE]: "Microservice",
+	[WorkspaceContainerVariant.QUEUE]: "Queue",
+	[WorkspaceContainerVariant.BROWSER]: "Browser",
+	[WorkspaceContainerVariant.MOBILE]: "Mobile",
 };
 
 export const ContainerVariantMenu: FC<ContainerVariantSelectProps> = ({
@@ -28,15 +28,11 @@ export const ContainerVariantMenu: FC<ContainerVariantSelectProps> = ({
 			{map(variantOptions, (v, k) => (
 				<Menu.Item
 					leftSection={
-						<ContainerVariantIcon variant={k as ContainerEntity["variant"]} />
+						<ContainerVariantIcon variant={k as WorkspaceContainerVariant} />
 					}
-					onClick={() => onChange(k as ContainerEntity["variant"])}
+					onClick={() => onChange(k as WorkspaceContainerVariant)}
 				>
-					<Text
-						styles={{ root: { fontWeight: variant === k ? 700 : undefined } }}
-					>
-						{v}
-					</Text>
+					<Text fw={variant === k ? "bold" : undefined}>{v}</Text>
 				</Menu.Item>
 			))}
 			<Menu.Divider />

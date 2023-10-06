@@ -1,24 +1,31 @@
-import { SegmentedControl } from "@mantine/core";
-import { observer } from "mobx-react-lite";
+import { SegmentedControl, Tabs } from "@mantine/core";
 import { FC, useState } from "react";
 import { Panel } from "reactflow";
 import { match } from "ts-pattern";
 import { C4NodeType } from "../@C4Workspace/C4Diagram.ts";
 import { C4DiagramCanvas } from "../@C4Workspace/C4DiagramCanvas.tsx";
-import { PageShell } from "../components/PageShell.tsx";
-import { config } from "../config.ts";
 import { useContainerDiagram } from "../hooks/useContainerDiagram.ts";
 import { useSystemDiagram } from "../hooks/useSystemDiagram.ts";
 
-export type ExplorerPageProps = {};
+export type C4DiagramsPanelProps = {
+	ids: string[];
+	value: string;
+};
 
-export const ExplorerPage: FC<ExplorerPageProps> = observer(({}) => {
+export const C4DiagramsPanel: FC<C4DiagramsPanelProps> = ({ ids, value }) => {
+	const systemDiagram = useSystemDiagram(ids);
+	const containerDiagram = useContainerDiagram(ids);
+
 	const [nodeType, setNodeType] = useState(C4NodeType.SYSTEM);
-	const systemDiagram = useSystemDiagram();
-	const containerDiagram = useContainerDiagram();
-
 	return (
-		<PageShell h={`calc(100vh - ${config.header.height}px)`}>
+		<Tabs.Panel
+			key={ids.join("")}
+			id={ids.join("")}
+			value={value}
+			styles={{
+				panel: { flex: "auto", display: "flex" },
+			}}
+		>
 			<C4DiagramCanvas
 				diagram={match(nodeType)
 					.with(C4NodeType.SYSTEM, () => systemDiagram)
@@ -36,6 +43,6 @@ export const ExplorerPage: FC<ExplorerPageProps> = observer(({}) => {
 					/>
 				</Panel>
 			</C4DiagramCanvas>
-		</PageShell>
+		</Tabs.Panel>
 	);
-});
+};

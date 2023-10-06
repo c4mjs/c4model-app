@@ -6,6 +6,7 @@ import {
 	EdgeProps,
 	getBezierPath,
 } from "reactflow";
+import { C4Dependency } from "./C4Diagram.ts";
 
 export const MyEdge: FC<EdgeProps> = ({
 	id,
@@ -26,6 +27,8 @@ export const MyEdge: FC<EdgeProps> = ({
 		targetPosition,
 	});
 
+	const it = data.instance as C4Dependency;
+
 	return (
 		<>
 			<BaseEdge id={id} path={edgePath} />
@@ -38,11 +41,14 @@ export const MyEdge: FC<EdgeProps> = ({
 							alignItems: "center",
 							position: "absolute",
 							transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+							zIndex: 3,
 						},
 					}}
 				>
-					<Text size={"xs"}>{data?.description}</Text>
-					{data.technology && <Text size={"xs"}>[{data?.technology}]</Text>}
+					<Text size={"xs"}>{it.meta.description}</Text>
+					{it.meta.technology && (
+						<Text size={"xs"}>[{it.meta.technology}]</Text>
+					)}
 				</Stack>
 			</EdgeLabelRenderer>
 		</>

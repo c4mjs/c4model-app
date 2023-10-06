@@ -1,0 +1,222 @@
+{
+	"id": "5c6d612a-9f56-42b0-8225-a5390e85936e",
+	"name": "Big Bank PLC",
+	"version": "1.0.0",
+	"groups": [
+		{
+			"id": "ba95636f-25af-4a8c-92c8-95316014533b",
+			"name": "Internet Banking",
+			"description": "The Internet Banking Product Family",
+			"systems": [
+				{
+					"id": "a88a6325-1287-4e83-86f2-c7f78e0e7576",
+					"name": "Internet Banking System",
+					"description": "Allows customers to view information about their bank accounts, and make payments.",
+					"group": "ba95636f-25af-4a8c-92c8-95316014533b",
+					"containers": [
+						{
+							"id": "42328a5f-4046-40f9-a30f-99a2fbf76107",
+							"name": "Web Application",
+							"variant": "default",
+							"description": "Delivers the static content and the\nInternet banking single page application.",
+							"technology": "Java and Spring MVC",
+							"system": "a88a6325-1287-4e83-86f2-c7f78e0e7576",
+							"plugins": [
+								{
+									"id": "0706c3a5-c361-4aa7-b12d-7f66a2bf5211",
+									"name": "Login Sequence",
+									"type": "mermaid",
+									"container": "42328a5f-4046-40f9-a30f-99a2fbf76107",
+									"data": {
+										"chart": "sequenceDiagram\n    participant User as Customer\n    participant WA as Web Application\n    participant SPA as Single-Page Application\n    participant API as API Application\n    participant DB as Database\n\n    User->>WA: Accesses banking site\n    WA->>SPA: Loads Single-Page Application\n    User->>SPA: Enters login details\n    SPA->>API: Sends login request with credentials\n    API->>DB: Verifies credentials\n    DB-->>API: Returns verification result\n    API-->>SPA: Sends login response (success/fail)\n    User->>SPA: Requests account details\n    SPA->>API: Fetches account details for user\n    API->>DB: Retrieves account details\n    DB-->>API: Returns account details\n    API-->>SPA: Displays account details\n    User->>SPA: Views account details\n"
+									}
+								}
+							]
+						},
+						{
+							"id": "20eb4154-38e2-466f-98b9-747e20844f32",
+							"name": "Single-Page Application",
+							"variant": "browser",
+							"description": "Provides all of the Internet banking functionality to customers via their web browser.",
+							"technology": "JavaScript and Angular",
+							"system": "a88a6325-1287-4e83-86f2-c7f78e0e7576",
+							"plugins": []
+						},
+						{
+							"id": "9324f234-c352-431b-857e-906069915d3d",
+							"name": "Mobile App",
+							"variant": "mobile",
+							"description": "Provides a limited subset of the Internet banking functionality to customers via their mobile device.",
+							"technology": "Xamarin",
+							"system": "a88a6325-1287-4e83-86f2-c7f78e0e7576",
+							"plugins": []
+						},
+						{
+							"id": "0eebe251-d309-4303-ac81-11838091705c",
+							"name": "API Application",
+							"variant": "default",
+							"description": "Provides Internet banking functionality via a JSON/HTTPS API.",
+							"technology": "Java and Spring MVC",
+							"system": "a88a6325-1287-4e83-86f2-c7f78e0e7576",
+							"plugins": [
+								{
+									"id": "86d25410-0f6c-4ef4-99a0-a07571916132",
+									"name": "Swagger UI",
+									"type": "swagger-ui",
+									"container": "0eebe251-d309-4303-ac81-11838091705c",
+									"data": {
+										"url": "https://petstore.swagger.io/v2/swagger.json"
+									}
+								}
+							]
+						},
+						{
+							"id": "c479f5cb-5200-43e5-96fc-3042305e88dd",
+							"name": "Database",
+							"variant": "data",
+							"description": "Stores user registration information, hashed authentication credentials, access logs, etc.",
+							"technology": "Oracle Database Schema",
+							"system": "a88a6325-1287-4e83-86f2-c7f78e0e7576",
+							"plugins": [
+								{
+									"id": "7d696837-9c30-4ee8-9a5b-b29fc109c306",
+									"name": "Database Schema",
+									"type": "mermaid",
+									"container": "c479f5cb-5200-43e5-96fc-3042305e88dd",
+									"data": {
+										"chart": "erDiagram\n    USER ||--o{ CREDENTIALS : \"has\"\n    USER ||--o{ ACCESSLOG : \"generates\"\n    \n    USER {\n        int id\n        string name\n        string email\n        date registrationDate\n    }\n    \n    CREDENTIALS {\n        int id\n        int userId\n        string hashedPassword\n    }\n    \n    ACCESSLOG {\n        int id\n        int userId\n        date accessDate\n        string activity\n    }\n"
+									}
+								}
+							]
+						}
+					]
+				},
+				{
+					"id": "f40042c1-447c-433c-bd1f-e84df760941c",
+					"name": "Mainframe Banking System",
+					"description": "Stores all of the core banking information about customers, accounts, transactions, etc.",
+					"group": "ba95636f-25af-4a8c-92c8-95316014533b",
+					"containers": [
+						{
+							"id": "8638e93f-f8d1-4522-9b3e-5f902cafaccc",
+							"name": "XML API",
+							"variant": "default",
+							"description": "Provides an API interface into the mainframe",
+							"technology": "php",
+							"system": "f40042c1-447c-433c-bd1f-e84df760941c",
+							"plugins": []
+						}
+					]
+				},
+				{
+					"id": "cddecf0c-2910-442f-8ded-dfc1ed983595",
+					"name": "E-mail System",
+					"description": "The internal Microsoft Exchange e-mail system.",
+					"group": "ba95636f-25af-4a8c-92c8-95316014533b",
+					"containers": [
+						{
+							"id": "fd9f37cd-20d6-4b74-bf3d-e09944074ddf",
+							"name": "SMTP Server",
+							"variant": "default",
+							"description": "The server is responsible for sending emails.",
+							"technology": "SMTP",
+							"system": "cddecf0c-2910-442f-8ded-dfc1ed983595",
+							"plugins": []
+						}
+					]
+				},
+				{
+					"id": "90d847c6-c8f0-4c08-96c8-ea254c878288",
+					"name": "Personal Banking Customers",
+					"description": "Views account balances, and makes payments using",
+					"group": "ba95636f-25af-4a8c-92c8-95316014533b",
+					"containers": [
+						{
+							"id": "94cc3e64-9057-40b9-8283-671150730aac",
+							"name": "Web Customer",
+							"variant": "default",
+							"description": "A customer of the bank, with personal bank accounts.",
+							"technology": "-",
+							"system": "90d847c6-c8f0-4c08-96c8-ea254c878288",
+							"plugins": []
+						},
+						{
+							"id": "9ba67658-78ae-47c4-962f-2045928fca39",
+							"name": "Mobile Customer",
+							"variant": "default",
+							"description": "A customer of the bank, with personal bank accounts.",
+							"technology": "-",
+							"system": "90d847c6-c8f0-4c08-96c8-ea254c878288",
+							"plugins": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"relationships": [
+		{
+			"id": "58abc793-8f98-49b9-8088-4b38e715ed73",
+			"description": "Delivers to the customer's web browser",
+			"technology": "-",
+			"sender": "42328a5f-4046-40f9-a30f-99a2fbf76107",
+			"receiver": "20eb4154-38e2-466f-98b9-747e20844f32"
+		},
+		{
+			"id": "26dabf0f-33b2-43c0-9df2-2c48bf4914a3",
+			"description": "Makes API calls to",
+			"technology": "JSON/HTTPS",
+			"sender": "20eb4154-38e2-466f-98b9-747e20844f32",
+			"receiver": "0eebe251-d309-4303-ac81-11838091705c"
+		},
+		{
+			"id": "08490e0d-6666-415c-a1f8-17304c4f4ea9",
+			"description": "Makes API calls to",
+			"technology": "JSON/HTTPS",
+			"sender": "9324f234-c352-431b-857e-906069915d3d",
+			"receiver": "0eebe251-d309-4303-ac81-11838091705c"
+		},
+		{
+			"id": "2dfab44f-b658-456e-8808-7895bea2a496",
+			"description": "Reads from and writes to",
+			"technology": "SQL/TCP",
+			"sender": "0eebe251-d309-4303-ac81-11838091705c",
+			"receiver": "c479f5cb-5200-43e5-96fc-3042305e88dd"
+		},
+		{
+			"id": "20e0b01b-6939-4615-a2c3-065dbc16f715",
+			"description": "Makes API calls to",
+			"technology": "XML/HTTP",
+			"sender": "0eebe251-d309-4303-ac81-11838091705c",
+			"receiver": "8638e93f-f8d1-4522-9b3e-5f902cafaccc"
+		},
+		{
+			"id": "d0e871bc-1d2d-4b37-bb75-077ddf125f41",
+			"description": "Sends e-mail using",
+			"technology": "SMTP",
+			"sender": "0eebe251-d309-4303-ac81-11838091705c",
+			"receiver": "fd9f37cd-20d6-4b74-bf3d-e09944074ddf"
+		},
+		{
+			"id": "7d847809-922a-440e-b9e3-eef4322b1224",
+			"description": "Visits bigbank.com/ib using",
+			"technology": "HTTPS",
+			"sender": "94cc3e64-9057-40b9-8283-671150730aac",
+			"receiver": "42328a5f-4046-40f9-a30f-99a2fbf76107"
+		},
+		{
+			"id": "6247b354-b4d4-4a5a-9651-a1b4925d72ee",
+			"description": "Views account balances and makes payments using",
+			"technology": "-",
+			"sender": "94cc3e64-9057-40b9-8283-671150730aac",
+			"receiver": "20eb4154-38e2-466f-98b9-747e20844f32"
+		},
+		{
+			"id": "d1e68d81-23ad-49a1-ad55-832928b3a3a0",
+			"description": "Views account balances, and makes payments using",
+			"technology": "-",
+			"sender": "9ba67658-78ae-47c4-962f-2045928fca39",
+			"receiver": "9324f234-c352-431b-857e-906069915d3d"
+		}
+	]
+}

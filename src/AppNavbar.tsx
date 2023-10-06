@@ -1,34 +1,86 @@
-import { Divider, NavLink, ScrollArea, Stack, Text } from "@mantine/core";
-import { isEmpty } from "lodash";
-import { FC, useRef } from "react";
-import { VscAdd } from "react-icons/vsc";
-import { useObservable } from "react-use";
-import { ContainerVariantIcon } from "./components/ContainerVariantIcon.tsx";
-import { select, useSelection } from "./hooks/useSelection.ts";
 import {
-	getNewGroupEntity,
-	useWorkspaceDb,
-} from "./workspaces/workspace-db.ts";
+	ActionIcon,
+	Button,
+	ButtonProps,
+	Collapse,
+	Divider,
+	Group,
+	ScrollArea,
+	Stack,
+	Text,
+	useMantineColorScheme,
+	useMantineTheme,
+} from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { isUndefined } from "lodash";
+import { observer } from "mobx-react-lite";
+import { FC, ReactNode, useRef } from "react";
+import {
+	VscAdd,
+	VscChevronDown,
+	VscChevronRight,
+	VscCompass,
+	VscLayers,
+	VscOrganization,
+} from "react-icons/vsc";
+import { ContainerVariantIcon } from "./components/ContainerVariantIcon.tsx";
+import { deselect, select, useSelection } from "./hooks/useSelection.ts";
+import { useWorkspace } from "./workspace/Workspace.ts";
 
-export const AppNavbar: FC = () => {
-	const db = useWorkspaceDb();
-	const selection = useSelection();
+export type NavButtonProps = {
+	buttonProps?: ButtonProps;
+	withCollapse?: boolean;
+	defaultOpened?: boolean;
+	children?: ReactNode;
+	label: ReactNode;
+	leftSection?: ReactNode;
+	onClick?: () => void;
+};
+export const NavButton: FC<NavButtonProps> = ({
+	withCollapse,
+	label,
+	defaultOpened,
+	children,
+	leftSection,
+	onClick,
+	buttonProps,
+}) => {
+	const [opened, collapse] = useDisclosure(
+		defaultOpened || isUndefined(withCollapse),
+	);
+
+	return (
+		<Stack gap={0}>
+			<Group justify={"space-between"}>
+				<Button
+					variant={"transparent"}
+					onClick={onClick}
+					leftSection={leftSection}
+					{...buttonProps}
+				>
+					{label}
+				</Button>
+				{children && withCollapse && (
+					<ActionIcon variant={"subtle"} onClick={collapse.toggle}>
+						{opened ? <VscChevronDown /> : <VscChevronRight />}
+					</ActionIcon>
+				)}
+			</Group>
+			{children && (
+				<Collapse in={opened} pl={"lg"}>
+					{children}
+				</Collapse>
+			)}
+		</Stack>
+	);
+};
+
+export const AppNavbar: FC = observer(() => {
+	const { colors } = useMantineTheme();
+	const { colorScheme } = useMantineColorScheme();
 	const scrollParent = useRef<HTMLDivElement | null>(null);
-
-	const groups = useObservable(
-		db?.collections.groups.find({ sort: [{ name: "asc" }] }).$,
-		[],
-	);
-
-	const systems = useObservable(
-		db?.collections.systems.find({ sort: [{ name: "asc" }] }).$,
-		[],
-	);
-
-	const containers = useObservable(
-		db?.containers.find({ sort: [{ name: "asc" }] }).$,
-		[],
-	);
+	const selection = useSelection();
+	const workspace = useWorkspace();
 
 	return (
 		<Stack
@@ -42,70 +94,108 @@ export const AppNavbar: FC = () => {
 				},
 			}}
 		>
-			<Stack gap={0} ref={scrollParent} styles={{ root: { flex: "auto" } }}>
-				<ScrollArea mah={scrollParent.current?.clientHeight}>
-					{groups.map((group) => (
-						<NavLink
-							defaultOpened
-							key={group.id}
-							id={group.id}
-							label={
-								<Text size={"sm"} styles={{ root: { fontWeight: "600" } }}>
-									{group.name}
-								</Text>
-							}
-							onClick={() => select(group)}
-							active={selection === group}
-						>
-							{isEmpty(systems?.filter((it) => it.group === group.id))
-								? undefined
-								: systems
-										?.filter((it) => it.group === group.id)
-										.map((system) => (
-											<NavLink
-												key={system.id}
-												label={<Text size={"sm"}>{system.name}</Text>}
-												onClick={() => select(system)}
-												active={selection === system}
-												children={
-													isEmpty(
-														containers.filter((it) => it.system === system.id),
-													)
-														? undefined
-														: containers
-																.filter((it) => it.system === system.id)
-																.map((container) => (
-																	<NavLink
-																		leftSection={
-																			<ContainerVariantIcon
-																				variant={container.variant}
-																			/>
-																		}
-																		key={container.id}
-																		label={
-																			<Text size={"xs"}>{container.name}</Text>
-																		}
-																		onClick={() => select(container)}
-																		active={selection === container}
-																	/>
-																))
-												}
-											/>
-										))}
-						</NavLink>
-					))}
-				</ScrollArea>
-			</Stack>
-			<Stack gap={0}>
-				<Divider />
-				<NavLink
-					leftSection={<VscAdd />}
-					label={"Add"}
-					onClick={async () =>
-						db.collections.groups.insert(getNewGroupEntity())
+			<Stack p={"xs"} ref={scrollParent} styles={{ root: { flex: "auto" } }}>
+				<NavButton
+					leftSection={<VscCompass />}
+					label={
+						<Text fw={isUndefined(selection) ? "bold" : undefined}>Home</Text>
 					}
+					onClick={deselect}
 				/>
+				<Divider />
+
+				<Group justify={"space-between"}>
+					<Text fw={"bold"} c="dimmed">
+						Groups
+					</Text>
+					<ActionIcon
+						variant={"subtle"}
+						onClick={() => workspace.addNewGroup()}
+					>
+						<VscAdd />
+					</ActionIcon>
+				</Group>
+				<ScrollArea mah={scrollParent.current?.clientHeight}>
+					<Stack gap={"xs"}>
+						{workspace.groups.values().map((group) => (
+							<Stack gap={0}>
+								<NavButton
+									withCollapse
+									leftSection={<VscOrganization />}
+									defaultOpened={true}
+									key={group.id}
+									label={
+										<Text fw={selection === group ? "bold" : undefined}>
+											{group.name}
+										</Text>
+									}
+									onClick={() => select(group)}
+								>
+									<Stack
+										gap={0}
+										styles={{
+											root: {
+												borderLeft: "solid 1px",
+												borderLeftColor: colors.dark[0],
+											},
+										}}
+									>
+										{workspace.systems
+											.filter((it) => it.group.id === group.id)
+											.map((system) => (
+												<NavButton
+													leftSection={<VscLayers />}
+													key={system.id}
+													label={
+														<Text
+															fw={selection === system ? "bold" : undefined}
+															size={"xs"}
+														>
+															{system.name}
+														</Text>
+													}
+													onClick={() => select(system)}
+												>
+													{workspace.containers
+														.filter((it) => it.system.id === system.id)
+														.map((container) => (
+															<NavButton
+																buttonProps={{
+																	size: "compact-md",
+																	variant: "transparent",
+																	color:
+																		colors.gray[colorScheme === "dark" ? 4 : 7],
+																}}
+																onClick={() => select(container)}
+																key={container.id}
+																leftSection={
+																	<ContainerVariantIcon
+																		variant={container.variant}
+																	/>
+																}
+																label={
+																	<Text
+																		fw={
+																			selection === container
+																				? "bold"
+																				: undefined
+																		}
+																		size={"xs"}
+																	>
+																		{container.name}
+																	</Text>
+																}
+															/>
+														))}
+												</NavButton>
+											))}
+									</Stack>
+								</NavButton>
+							</Stack>
+						))}
+					</Stack>
+				</ScrollArea>
 			</Stack>
 		</Stack>
 	);
-};
+});

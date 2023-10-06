@@ -1,38 +1,54 @@
 import {
 	AppShell,
-	Button,
-	Divider,
-	Modal,
-	Select,
-	Stack,
-	Title,
-	noop,
+	useMantineColorScheme,
+	useMantineTheme,
 } from "@mantine/core";
-import { match } from "ts-pattern";
+import { useHotkeys } from "@mantine/hooks";
+import { spotlight } from "@mantine/spotlight";
+import { noop } from "lodash";
+import { useState } from "react";
 import { AppHeader } from "./AppHeader.tsx";
 import { AppNavbar } from "./AppNavbar.tsx";
+import bigBankPlc from "./big-bank-plc.json";
+import { config } from "./config.ts";
+import { SpotlightSearch } from "./containers/SpotlightSearch.tsx";
+import { useExportWorkspace } from "./hooks/useExportWorkspace.ts";
+import { useImportWorkspace } from "./hooks/useImportWorkspace.ts";
 import { useSelection } from "./hooks/useSelection.ts";
-import { useWorkspaceAdapter } from "./hooks/useWorkspaceAdapter.ts";
 import { ContainerPage } from "./pages/ContainerPage.tsx";
 import { ExplorerPage } from "./pages/ExplorerPage.tsx";
 import { GroupPage } from "./pages/GroupPage.tsx";
 import { SystemPage } from "./pages/SystemPage.tsx";
-import { exportWorkspace, importWorkspace } from "./utils/import_export.tsx";
-import { WorkspaceAdapterType } from "./workspaces/workspace-adapter.ts";
-import { WorkspaceProvider } from "./workspaces/workspace-db.ts";
+import {
+	Workspace,
+	WorkspaceDto,
+	WorkspaceProvider,
+} from "./workspace/Workspace.ts";
+import { WorkspaceContainer } from "./workspace/WorkspaceContainer.ts";
+import { WorkspaceGroup } from "./workspace/WorkspaceGroup.ts";
+import { WorkspaceSystem } from "./workspace/WorkspaceSystem.ts";
 
 export const App = () => {
-	const {
-		adapter,
-		setAdapterType,
-		adapterType,
-		handleSave,
-		handleNewFile,
-		handleOpenFile,
-		setAdapter,
-	} = useWorkspaceAdapter();
+	const { colorScheme } = useMantineColorScheme();
+	const { colors } = useMantineTheme();
 
 	const selection = useSelection();
+
+	const [workspace, setWorkspace] = useState<Workspace>(
+		Workspace.fromDto(bigBankPlc as WorkspaceDto),
+	);
+
+	const [handle, setHandle] = useState<FileSystemFileHandle | undefined>();
+	const handleLoad = useImportWorkspace();
+	const handleSave = useExportWorkspace(workspace);
+	useHotkeys([["mod+S", () => handleSave(handle).then(setHandle)]]);
+
+	const handleNew = () => {
+		setWorkspace(
+			new Workspace(crypto.randomUUID(), "1.0.0", "New Workspace..."),
+		);
+		setHandle(undefined);
+	};
 
 	return (
 		<AppShell
@@ -40,70 +56,55 @@ export const App = () => {
 				root: { height: "100vh" },
 				header: { display: "flex" },
 				navbar: { display: "flex", flex: "auto" },
+				main: {
+					backgroundColor:
+						colorScheme === "light" ? colors.gray[0] : colors.dark[8],
+				},
 			}}
-			header={{ height: 60 }}
-			footer={{ height: 30 }}
+			header={{ height: config.header.height }}
 			navbar={{
-				width: 300,
+				width: config.navbar.width,
 				breakpoint: "xs",
 			}}
 		>
-			<Modal opened={!adapter} onClose={noop} withCloseButton={false}>
-				<Stack>
-					<Title>C4 Model</Title>
-					<Divider />
-					<Select
-						label={"Storage"}
-						defaultValue={adapterType}
-						data={[
-							{
-								value: WorkspaceAdapterType.BROWSER,
-								label: "Local Browser Storage",
-							},
-							{ value: WorkspaceAdapterType.LOCAL, label: "Local File System" },
-						]}
-						onChange={(it) => setAdapterType(it as WorkspaceAdapterType)}
+			<WorkspaceProvider value={workspace}>
+				<AppShell.Header>
+					<AppHeader
+						id={workspace.id}
+						name={workspace.name}
+						onNameChange={(name) => workspace.setName(name)}
+						onNew={handleNew}
+						onOpen={() =>
+							handleLoad().then(({ workspace, handle }) => {
+								setWorkspace(workspace);
+								setHandle(handle);
+							})
+						}
+						onSave={() => handleSave(handle).then(setHandle)}
+						onSaveAs={() => handleSave(undefined).then(setHandle)}
+						onClose={noop}
+						onSpotlight={spotlight.open}
 					/>
-					<Divider />
-					<Stack gap={"xs"}>
-						<Button onClick={handleNewFile}>Create New Workspace</Button>
-						<Button onClick={handleOpenFile}>Open Existing Workspace</Button>
-					</Stack>
-				</Stack>
-			</Modal>
-			{adapter && (
-				<WorkspaceProvider value={adapter.c4db}>
-					<AppShell.Header>
-						<AppHeader
-							onNew={() => {
-								setAdapter(undefined);
-							}}
-							onOpen={handleOpenFile}
-							onSave={handleSave}
-							onClose={() => {
-								setAdapter(undefined);
-							}}
-							onExport={() => exportWorkspace(adapter)}
-							onImport={() => importWorkspace(adapter)}
-						/>
-					</AppShell.Header>
+					<SpotlightSearch />
+				</AppShell.Header>
 
-					<AppShell.Navbar>
-						<AppNavbar />
-					</AppShell.Navbar>
+				<AppShell.Navbar>
+					<AppNavbar />
+				</AppShell.Navbar>
 
-					<AppShell.Main>
-						{(selection &&
-							match(selection.type)
-								.with("group", () => <GroupPage id={selection.id} />)
-								.with("system", () => <SystemPage id={selection.id} />)
-								.with("container", () => <ContainerPage id={selection.id} />)
-								.otherwise(() => <ExplorerPage />)) || <ExplorerPage />}
-					</AppShell.Main>
-
-					<AppShell.Footer />
-				</WorkspaceProvider>
-			)}
+				<AppShell.Main>
+					{!selection && <ExplorerPage />}
+					{selection instanceof WorkspaceGroup && (
+						<GroupPage group={selection} />
+					)}
+					{selection instanceof WorkspaceSystem && (
+						<SystemPage system={selection} />
+					)}
+					{selection instanceof WorkspaceContainer && (
+						<ContainerPage container={selection} />
+					)}
+				</AppShell.Main>
+			</WorkspaceProvider>
 		</AppShell>
 	);
 };

@@ -1,16 +1,16 @@
 import { useObservable } from "react-use";
 import { BehaviorSubject } from "rxjs";
-import {
-	ContainerEntity,
-	GroupEntity,
-	SystemEntity,
-} from "../workspaces/workspace-db.ts";
+import { WorkspaceContainer } from "../workspace/WorkspaceContainer.ts";
+import { WorkspaceGroup } from "../workspace/WorkspaceGroup.ts";
+import { WorkspaceSystem } from "../workspace/WorkspaceSystem.ts";
 
 const selection$ = new BehaviorSubject<
-	GroupEntity | SystemEntity | ContainerEntity | undefined
+	WorkspaceGroup | WorkspaceSystem | WorkspaceContainer | undefined
 >(undefined);
 
-export const select = (it: any) => selection$.next(it);
+export const select = (
+	it: WorkspaceGroup | WorkspaceSystem | WorkspaceContainer,
+) => selection$.next(it);
 
 export const deselect = () => selection$.next(undefined);
 

@@ -1,81 +1,111 @@
-import { Button, Container, Group, Stack } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import {
+	ActionIcon,
+	Card,
+	Group,
+	Stack,
+	Tabs,
+	Text,
+	Title,
+} from "@mantine/core";
+import { observer } from "mobx-react-lite";
 import { FC } from "react";
-import { FaShareNodes } from "react-icons/fa6";
-import { VscCompass, VscLayers } from "react-icons/vsc";
-import { ContainersTable } from "../components/ContainersTable.tsx";
+import { VscAdd, VscCompass, VscLayers } from "react-icons/vsc";
+import { ContainerVariantIcon } from "../components/ContainerVariantIcon.tsx";
 import { MyBreadcrumbs } from "../components/MyBreadcrumbs.tsx";
 import { NameAndDescription } from "../components/NameAndDescription.tsx";
-import { TableWrapper } from "../components/TableWrapper.tsx";
-import { SystemContainerCanvas } from "../containers/SystemContainerCanvas.tsx";
+import { PageShell } from "../components/PageShell.tsx";
+import { C4DiagramsPanel } from "../containers/C4DiagramsPanel.tsx";
 import { deselect, select } from "../hooks/useSelection.ts";
-import { useSystem } from "../hooks/useSystem.tsx";
+import { useSystemOperations } from "../hooks/useSystemOperations.ts";
+import { WorkspaceSystem } from "../workspace/WorkspaceSystem.ts";
 
-export const SystemPage: FC<{ id: string }> = ({ id }) => {
-	const [contextOpened, context] = useDisclosure(false);
-	const { system, group, removeSystem, moveSystem, containers, addContainer } =
-		useSystem(id);
+export const SystemPage: FC<{ system: WorkspaceSystem }> = observer(
+	({ system }) => {
+		const { move, remove } = useSystemOperations(system);
 
-	return (
-		<Container>
-			<Stack pt={"md"}>
-				{system && group && (
-					<Stack>
-						<MyBreadcrumbs
-							data={[
-								{
-									id: "home",
-									label: <VscCompass />,
-									onClick: () => deselect(),
-								},
-								{
-									id: group.id,
-									label: group.name,
-									onClick: () => select(group),
-								},
-								{ id: system.id, label: system.name },
-							]}
-						/>
-						<NameAndDescription
-							id={system.id}
-							defaultName={system.name}
-							defaultDescription={system.description}
-							onNameChange={(name) => system.getLatest().patch({ name })}
-							onDescriptionChange={(description) =>
-								system.getLatest().patch({ description })
-							}
-							icon={<VscLayers size={"1.5rem"} />}
-							onDelete={removeSystem}
-							onMove={moveSystem}
-						/>
+		return (
+			<PageShell>
+				<Stack>
+					<MyBreadcrumbs
+						data={[
+							{
+								id: "home",
+								label: <VscCompass />,
+								onClick: deselect,
+							},
+							{
+								id: system.group.id,
+								label: system.group.name,
+								onClick: () => select(system.group),
+							},
+							{ id: system.id, label: system.name },
+						]}
+					/>
+					<NameAndDescription
+						id={system.id}
+						defaultName={system.name}
+						defaultDescription={system.description}
+						onNameChange={(name) => system.setName(name)}
+						onDescriptionChange={(description) =>
+							system.setDescription(description)
+						}
+						icon={<VscLayers size={"1.5rem"} />}
+						onDelete={remove}
+						onMove={move}
+					/>
+				</Stack>
 
+				<Tabs
+					defaultValue="containers"
+					styles={{
+						root: {
+							flex: "auto",
+							display: "flex",
+							flexDirection: "column",
+						},
+					}}
+				>
+					<Tabs.List>
+						<Tabs.Tab value={"containers"}>Containers</Tabs.Tab>
+						<Tabs.Tab value={"c4"}>C4</Tabs.Tab>
+					</Tabs.List>
+
+					<Tabs.Panel value={"containers"} p={"md"}>
 						<Group>
-							<Button
-								onClick={context.open}
-								size={"xs"}
-								variant={"outline"}
-								leftSection={<FaShareNodes />}
-							>
-								View System Container
-							</Button>
+							{system.containers.values().map((container) => (
+								<Card
+									key={container.id}
+									shadow={"sm"}
+									w={"300px"}
+									h={"150px"}
+									onClick={() => select(container)}
+									styles={{ root: { cursor: "pointer" } }}
+								>
+									<Stack gap={"xs"}>
+										<Group>
+											<ContainerVariantIcon variant={container.variant} />
+											<Title size={"lg"} fw={"bold"}>
+												{container.name}
+											</Title>
+										</Group>
+										<Text>{container.technology}</Text>
+										<Text size={"xs"}>{container.description}</Text>
+									</Stack>
+								</Card>
+							))}
+							<ActionIcon onClick={() => system.addNewContainer()}>
+								<VscAdd />
+							</ActionIcon>
 						</Group>
+					</Tabs.Panel>
 
-						<SystemContainerCanvas
-							id={id}
-							opened={contextOpened}
-							onClose={context.close}
-						/>
-
-						<TableWrapper
-							label={"Containers"}
-							onAdd={addContainer}
-							addTooltip={"Add Container"}
-						>
-							<ContainersTable containers={containers} onRowSelect={select} />
-						</TableWrapper>
-					</Stack>
-				)}
-			</Stack>
-		</Container>
-	);
-};
+					<C4DiagramsPanel
+						key={`${system.id}_c4`}
+						ids={[system.id]}
+						value={"c4"}
+					/>
+				</Tabs>
+			</PageShell>
+		);
+	},
+);
