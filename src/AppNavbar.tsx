@@ -24,6 +24,7 @@ import {
 	VscOrganization,
 } from "react-icons/vsc";
 import { ContainerVariantIcon } from "./components/ContainerVariantIcon.tsx";
+import { config } from "./config.ts";
 import { deselect, select, useSelection } from "./hooks/useSelection.ts";
 import { useWorkspace } from "./workspace/Workspace.ts";
 
@@ -51,11 +52,13 @@ export const NavButton: FC<NavButtonProps> = ({
 
 	return (
 		<Stack gap={0}>
-			<Group justify={"space-between"}>
+			<Group justify={"space-between"} gap={0} wrap={"nowrap"}>
 				<Button
 					variant={"transparent"}
 					onClick={onClick}
 					leftSection={leftSection}
+					fullWidth
+					justify={"start"}
 					{...buttonProps}
 				>
 					{label}
@@ -89,43 +92,62 @@ export const AppNavbar: FC = observer(() => {
 			styles={{
 				root: {
 					flex: "auto",
-					justifyContent: "space-between",
 					display: "flex",
+					width: config.navbar.width,
 				},
 			}}
 		>
-			<Stack p={"xs"} ref={scrollParent} styles={{ root: { flex: "auto" } }}>
-				<NavButton
-					leftSection={<VscCompass />}
-					label={
-						<Text fw={isUndefined(selection) ? "bold" : undefined}>Home</Text>
-					}
-					onClick={deselect}
-				/>
-				<Divider />
-
-				<Group justify={"space-between"}>
-					<Text fw={"bold"} c="dimmed">
-						Groups
-					</Text>
-					<ActionIcon
-						variant={"subtle"}
-						onClick={() => workspace.addNewGroup()}
-					>
-						<VscAdd />
-					</ActionIcon>
-				</Group>
-				<ScrollArea mah={scrollParent.current?.clientHeight}>
-					<Stack gap={"xs"}>
-						{workspace.groups.values().map((group) => (
-							<Stack gap={0}>
+			<Stack styles={{ root: { flex: "auto" } }}>
+				<Stack pl={"xs"} pt={"xs"} pr={"xs"}>
+					<NavButton
+						leftSection={<VscCompass />}
+						label={
+							<Text fw={isUndefined(selection) ? "bold" : undefined}>Home</Text>
+						}
+						onClick={deselect}
+					/>
+					<Divider />
+					<Group justify={"space-between"}>
+						<Text fw={"bold"} c="dimmed">
+							Groups
+						</Text>
+						<ActionIcon
+							variant={"subtle"}
+							onClick={() => workspace.addNewGroup()}
+						>
+							<VscAdd />
+						</ActionIcon>
+					</Group>
+				</Stack>
+				<Stack ref={scrollParent} styles={{ root: { flex: "auto" } }}>
+					<ScrollArea h={scrollParent.current?.clientHeight}>
+						<Stack
+							pl={"xs"}
+							gap={"xs"}
+							styles={{
+								root: { width: config.navbar.width - 20, overflow: "hidden" },
+							}}
+						>
+							{workspace.groups.values().map((group) => (
 								<NavButton
+									buttonProps={{
+										w: config.navbar.width - 60,
+									}}
 									withCollapse
 									leftSection={<VscOrganization />}
 									defaultOpened={true}
 									key={group.id}
 									label={
-										<Text fw={selection === group ? "bold" : undefined}>
+										<Text
+											fw={selection === group ? "bold" : undefined}
+											styles={{
+												root: {
+													overflow: "hidden",
+													textOverflow: "ellipsis",
+													wordBreak: "break-all",
+												},
+											}}
+										>
 											{group.name}
 										</Text>
 									}
@@ -150,6 +172,13 @@ export const AppNavbar: FC = observer(() => {
 														<Text
 															fw={selection === system ? "bold" : undefined}
 															size={"xs"}
+															styles={{
+																root: {
+																	overflow: "hidden",
+																	textOverflow: "ellipsis",
+																	wordBreak: "break-all",
+																},
+															}}
 														>
 															{system.name}
 														</Text>
@@ -181,6 +210,13 @@ export const AppNavbar: FC = observer(() => {
 																				: undefined
 																		}
 																		size={"xs"}
+																		styles={{
+																			root: {
+																				overflow: "hidden",
+																				textOverflow: "ellipsis",
+																				wordBreak: "break-all",
+																			},
+																		}}
 																	>
 																		{container.name}
 																	</Text>
@@ -191,10 +227,10 @@ export const AppNavbar: FC = observer(() => {
 											))}
 									</Stack>
 								</NavButton>
-							</Stack>
-						))}
-					</Stack>
-				</ScrollArea>
+							))}
+						</Stack>
+					</ScrollArea>
+				</Stack>
 			</Stack>
 		</Stack>
 	);
