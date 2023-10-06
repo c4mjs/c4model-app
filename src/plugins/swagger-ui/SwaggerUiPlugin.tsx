@@ -1,6 +1,7 @@
-import { Stack, TextInput } from "@mantine/core";
-import React from "react";
+import { Stack, TextInput, useMantineColorScheme } from "@mantine/core";
+import React, { useEffect } from "react";
 import SwaggerUI from "swagger-ui-react";
+import "swagger-ui-react/swagger-ui.css";
 import { PluginDrawer } from "../PluginDrawer.tsx";
 import { PluginProps } from "../types.ts";
 import { SwaggerUiPluginData } from "./types.ts";
@@ -13,6 +14,23 @@ export const SwaggerUiPlugin: React.FC<PluginProps<SwaggerUiPluginData>> = ({
 	editing,
 	onCloseEditing,
 }) => {
+	const { colorScheme } = useMantineColorScheme();
+
+	useEffect(() => {
+		if (colorScheme === "dark") {
+			if (document.getElementById("swaggerUiCssDark")) return;
+
+			const linkEl = document.createElement("link");
+			linkEl.rel = "stylesheet";
+			linkEl.id = "swaggerUiCssDark";
+			linkEl.href = "/swagger-ui-dark.css";
+
+			document.head.appendChild(linkEl);
+		} else {
+			document.getElementById("swaggerUiCssDark")?.remove();
+		}
+	}, [colorScheme]);
+
 	return (
 		<Stack gap={0}>
 			<PluginDrawer
@@ -29,7 +47,7 @@ export const SwaggerUiPlugin: React.FC<PluginProps<SwaggerUiPluginData>> = ({
 					/>
 				</Stack>
 			</PluginDrawer>
-			{data?.url && <SwaggerUI url={data.url} />}
+			{data?.url && <SwaggerUI displayOperationId url={data.url} />}
 		</Stack>
 	);
 };

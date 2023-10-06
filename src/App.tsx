@@ -3,10 +3,10 @@ import {
 	useMantineColorScheme,
 	useMantineTheme,
 } from "@mantine/core";
-import { useHotkeys } from "@mantine/hooks";
+import { useHotkeys, useMediaQuery } from "@mantine/hooks";
 import { spotlight } from "@mantine/spotlight";
-import { noop } from "lodash";
-import { useState } from "react";
+import { isUndefined, noop } from "lodash";
+import { useEffect, useState } from "react";
 import { AppHeader } from "./AppHeader.tsx";
 import { AppNavbar } from "./AppNavbar.tsx";
 import bigBankPlc from "./big-bank-plc.json";
@@ -29,7 +29,9 @@ import { WorkspaceGroup } from "./workspace/WorkspaceGroup.ts";
 import { WorkspaceSystem } from "./workspace/WorkspaceSystem.ts";
 
 export const App = () => {
-	const { colorScheme } = useMantineColorScheme();
+	const prefersDark = useMediaQuery("(prefers-color-scheme: dark)");
+
+	const { colorScheme, setColorScheme } = useMantineColorScheme();
 	const { colors } = useMantineTheme();
 
 	const selection = useSelection();
@@ -42,6 +44,11 @@ export const App = () => {
 	const handleLoad = useImportWorkspace();
 	const handleSave = useExportWorkspace(workspace);
 	useHotkeys([["mod+S", () => handleSave(handle).then(setHandle)]]);
+
+	useEffect(() => {
+		if (isUndefined(prefersDark)) return;
+		setColorScheme(prefersDark ? "dark" : "light");
+	}, [prefersDark]);
 
 	const handleNew = () => {
 		setWorkspace(
