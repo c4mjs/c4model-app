@@ -112,6 +112,14 @@ export class Workspace {
 		group.systems.delete(system.id);
 	}
 
+	getSystem(id: string): WorkspaceSystem {
+		const system = this.systems.find((it) => it.id === id);
+		if (!system) {
+			throw new Error(`Unable to locate system ${id} in the workspace`);
+		}
+		return system;
+	}
+
 	moveSystem(id: string, groupId: string) {
 		const system = this.systems.find((it) => it.id === id);
 		if (!system) return;

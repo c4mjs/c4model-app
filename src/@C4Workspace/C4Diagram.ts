@@ -1,5 +1,7 @@
 import { graphlib, layout } from "dagre";
 import { keyBy } from "lodash";
+import { createContext, useContext } from "react";
+import { Subject } from "rxjs";
 import { NODE_BASE_HEIGHT, NODE_WIDTH, graphConfig } from "./config.ts";
 
 export enum C4NodeType {
@@ -86,6 +88,8 @@ export class C4Diagram {
 
 	readonly dependencies: C4Dependency[];
 
+	readonly nodeSelection$;
+
 	constructor(
 		nodes: C4Node[],
 		nodeGroups: C4NodeGroup[],
@@ -94,6 +98,7 @@ export class C4Diagram {
 		this.nodes = nodes;
 		this.nodeGroups = nodeGroups;
 		this.dependencies = dependencies;
+		this.nodeSelection$ = new Subject<C4Node>();
 	}
 
 	addNodeGroups(nodeGroups: C4NodeGroup[]) {
@@ -176,3 +181,9 @@ export class C4Diagram {
 		return l;
 	}
 }
+
+export const C4DiagramContext = createContext<C4Diagram>(
+	new C4Diagram([], [], []),
+);
+export const useC4Diagram = () => useContext(C4DiagramContext);
+export const C4DiagramProvider = C4DiagramContext.Provider;

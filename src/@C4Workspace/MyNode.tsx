@@ -1,8 +1,9 @@
-import { Card, Stack, Text } from "@mantine/core";
+import { ActionIcon, Card, Stack, Text } from "@mantine/core";
 import React from "react";
+import { FiExternalLink } from "react-icons/fi";
 import { Handle, Position } from "reactflow";
 import { match } from "ts-pattern";
-import { C4Node, C4NodeType } from "./C4Diagram.ts";
+import { C4Node, C4NodeType, useC4Diagram } from "./C4Diagram.ts";
 
 const backgroundColors: Record<C4NodeType, string> = {
 	[C4NodeType.CONTAINER]: "#4FA0D4",
@@ -13,6 +14,7 @@ export type MyNodeProps = {
 	data: { instance: C4Node };
 };
 export const MyNode: React.FC<MyNodeProps> = ({ data }) => {
+	const diagram = useC4Diagram();
 	const my: C4Node = data.instance;
 
 	return (
@@ -35,6 +37,14 @@ export const MyNode: React.FC<MyNodeProps> = ({ data }) => {
 					justify={"center"}
 					styles={{ root: { textAlign: "center" } }}
 				>
+					<ActionIcon
+						styles={{ root: { position: "fixed", top: 10, right: 10 } }}
+						variant={"transparent"}
+						color={"white"}
+						onClick={() => diagram.nodeSelection$.next(my)}
+					>
+						<FiExternalLink />
+					</ActionIcon>
 					<Text fw={700} size={"xl"}>
 						{my.name}
 					</Text>

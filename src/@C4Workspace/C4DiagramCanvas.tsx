@@ -1,5 +1,6 @@
 import { Stack, useMantineTheme } from "@mantine/core";
 import React, { ReactNode, useMemo } from "react";
+import { useObservable } from "react-use";
 import {
 	Background,
 	Edge,
@@ -8,7 +9,8 @@ import {
 	NodeTypes,
 	ReactFlow,
 } from "reactflow";
-import { C4Diagram } from "./C4Diagram.ts";
+import { tap } from "rxjs";
+import { C4Diagram, C4DiagramProvider, C4Node } from "./C4Diagram.ts";
 import { MyEdge } from "./MyEdge.tsx";
 import { MyNode } from "./MyNode.tsx";
 import { MyNodeGroup } from "./MyNodeGroup.tsx";
@@ -25,13 +27,17 @@ const nodeTypes: NodeTypes = {
 export type WorkspaceCanvasProps = {
 	diagram: C4Diagram;
 	children?: ReactNode;
+	onNodeSelect: (node: C4Node) => void;
 };
 export const C4DiagramCanvas: React.FC<WorkspaceCanvasProps> = ({
 	diagram,
 	children,
+	onNodeSelect,
 }) => {
 	const { colors } = useMantineTheme();
 	const positions = useMemo(() => diagram.getLayout(), [diagram]);
+
+	useObservable(diagram.nodeSelection$.pipe(tap((it) => onNodeSelect(it))));
 
 	const nodes: Node[] = useMemo(
 		() => [
@@ -88,19 +94,21 @@ export const C4DiagramCanvas: React.FC<WorkspaceCanvasProps> = ({
 	);
 
 	return (
-		<Stack style={{ flex: "auto" }}>
-			<ReactFlow
-				nodes={nodes}
-				edges={edges}
-				nodesDraggable={false}
-				nodesConnectable={false}
-				edgeTypes={edgeTypes}
-				nodeTypes={nodeTypes}
-				minZoom={0.1}
-			>
-				{children}
-				<Background />
-			</ReactFlow>
-		</Stack>
+		<C4DiagramProvider value={diagram}>
+			<Stack style={{ flex: "auto" }}>
+				<ReactFlow
+					nodes={nodes}
+					edges={edges}
+					nodesDraggable={false}
+					nodesConnectable={false}
+					edgeTypes={edgeTypes}
+					nodeTypes={nodeTypes}
+					minZoom={0.1}
+				>
+					{children}
+					<Background />
+				</ReactFlow>
+			</Stack>
+		</C4DiagramProvider>
 	);
 };
