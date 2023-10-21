@@ -2,6 +2,7 @@ import { NumberInput, Stack, Textarea } from "@mantine/core";
 import React from "react";
 import { PluginDrawer } from "../PluginDrawer.tsx";
 import { PluginProps } from "../types.ts";
+import { fromBase64, toBase64 } from "../utils.ts";
 import { SvgPluginData } from "./types.ts";
 
 export const SvgPlugin: React.FC<PluginProps<SvgPluginData>> = ({
@@ -13,7 +14,7 @@ export const SvgPlugin: React.FC<PluginProps<SvgPluginData>> = ({
 	onCloseEditing,
 }) => {
 	const defaultValue: SvgPluginData = {
-		svg: data?.svg || "",
+		svg: fromBase64(data?.svg || ""),
 		maxWidth: data?.maxWidth || 1000,
 	};
 
@@ -38,7 +39,7 @@ export const SvgPlugin: React.FC<PluginProps<SvgPluginData>> = ({
 						defaultValue={defaultValue.svg}
 						label={"Svg"}
 						onBlur={(e) =>
-							onDataChange({ ...defaultValue, svg: e.target.value })
+							onDataChange({ ...defaultValue, svg: toBase64(e.target.value) })
 						}
 						autosize
 						minRows={20}
@@ -50,7 +51,9 @@ export const SvgPlugin: React.FC<PluginProps<SvgPluginData>> = ({
 					<img
 						style={{ maxWidth: data.maxWidth }}
 						height={"auto"}
-						src={`data:image/svg+xml;utf8,${encodeURIComponent(data.svg)}`}
+						src={`data:image/svg+xml;utf8,${encodeURIComponent(
+							fromBase64(data.svg),
+						)}`}
 					/>
 				)}
 			</Stack>

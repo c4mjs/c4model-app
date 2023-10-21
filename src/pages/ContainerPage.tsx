@@ -92,6 +92,7 @@ export const ContainerPage: FC<{ container: WorkspaceContainer }> = observer(
 					}
 				/>
 				<TextInput
+					key={container.id}
 					label={"Technology"}
 					variant={"unstyled"}
 					defaultValue={container.technology}
