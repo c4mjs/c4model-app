@@ -59,7 +59,7 @@ export const useSystemDiagram = (systemIds?: string[]) => {
 					it.name,
 					diagram.getNodeGroup(it.group.id),
 					C4NodeType.SYSTEM,
-					{ description: it.description },
+					{ description: it.description, status: it.status },
 				),
 		);
 

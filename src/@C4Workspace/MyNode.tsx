@@ -3,6 +3,8 @@ import React from "react";
 import { FiExternalLink } from "react-icons/fi";
 import { Handle, Position } from "reactflow";
 import { match } from "ts-pattern";
+import { EntityStatusBadge } from "../components/EntityStatusBadge.tsx";
+import { WorkspaceEntityStatus } from "../workspace/WorkspaceEntityStatus.ts";
 import { C4Node, C4NodeType, useC4Diagram } from "./C4Diagram.ts";
 
 const backgroundColors: Record<C4NodeType, string> = {
@@ -55,7 +57,14 @@ export const MyNode: React.FC<MyNodeProps> = ({ data }) => {
 						))
 						.exhaustive()}
 					{my.meta.description && (
-						<Text size={"xs"}>{my.meta.description}</Text>
+						<Text pt="md" pb="md" size={"xs"}>
+							{my.meta.description}
+						</Text>
+					)}
+					{my.meta.status && (
+						<EntityStatusBadge
+							status={my.meta.status as WorkspaceEntityStatus}
+						/>
 					)}
 				</Stack>
 			</Card>

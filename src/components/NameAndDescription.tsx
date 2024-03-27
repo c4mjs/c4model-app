@@ -1,4 +1,11 @@
-import { ActionIcon, Menu, Stack, TextInput, Textarea } from "@mantine/core";
+import {
+	ActionIcon,
+	DefaultMantineColor,
+	Menu,
+	Stack,
+	TextInput,
+	Textarea,
+} from "@mantine/core";
 import { FC, ReactNode } from "react";
 
 export type NameAndDescription = {
@@ -11,6 +18,7 @@ export type NameAndDescription = {
 	onDelete?: () => void;
 	onMove?: () => void;
 	withMenu?: ReactNode;
+	color?: DefaultMantineColor;
 };
 
 export const NameAndDescription: FC<NameAndDescription> = ({
@@ -23,6 +31,7 @@ export const NameAndDescription: FC<NameAndDescription> = ({
 	onMove,
 	id,
 	withMenu,
+	color,
 }) => {
 	return (
 		<Stack gap={0}>
@@ -30,7 +39,7 @@ export const NameAndDescription: FC<NameAndDescription> = ({
 				leftSection={
 					<Menu position="bottom-start" shadow={"md"} width={200}>
 						<Menu.Target>
-							<ActionIcon variant={"subtle"} size={"lg"}>
+							<ActionIcon variant={"subtle"} size={"lg"} color={color}>
 								{icon}
 							</ActionIcon>
 						</Menu.Target>

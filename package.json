@@ -10,15 +10,15 @@
 		"format": "biome format --write ./src && biome lint --apply-unsafe ./src && biome check --apply-unsafe ./src"
 	},
 	"dependencies": {
-		"@mantine/code-highlight": "^7.0.2",
-		"@mantine/core": "^7.0.2",
-		"@mantine/dates": "^7.0.2",
-		"@mantine/dropzone": "^7.0.2",
-		"@mantine/form": "^7.0.2",
-		"@mantine/hooks": "^7.0.2",
-		"@mantine/modals": "^7.0.2",
-		"@mantine/notifications": "^7.0.2",
-		"@mantine/spotlight": "^7.0.2",
+		"@mantine/code-highlight": "^7.7.0",
+		"@mantine/core": "^7.7.0",
+		"@mantine/dates": "^7.7.0",
+		"@mantine/dropzone": "^7.7.0",
+		"@mantine/form": "^7.7.0",
+		"@mantine/hooks": "^7.7.0",
+		"@mantine/modals": "^7.7.0",
+		"@mantine/notifications": "^7.7.0",
+		"@mantine/spotlight": "^7.7.0",
 		"aigle": "^1.14.1",
 		"dagre": "^0.8.5",
 		"dayjs": "^1.11.10",
@@ -39,7 +39,7 @@
 		"swagger-ui-react": "^5.9.0",
 		"ts-pattern": "^5.0.5",
 		"validator": "^13.11.0",
-		"zod": "^3.22.2",
+		"zod": "^3.22.4",
 		"zod-to-json-schema": "^3.21.4"
 	},
 	"devDependencies": {

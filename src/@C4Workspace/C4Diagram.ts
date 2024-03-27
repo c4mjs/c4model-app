@@ -17,6 +17,7 @@ export enum C4NodeGroupType {
 export type C4Metadata = {
 	readonly description?: string;
 	readonly technology?: string;
+	readonly status?: string;
 };
 
 export class C4Node {

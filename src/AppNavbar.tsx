@@ -102,7 +102,9 @@ export const AppNavbar: FC = observer(() => {
 					<NavButton
 						leftSection={<VscCompass />}
 						label={
-							<Text fw={isUndefined(selection) ? "bold" : undefined}>Home</Text>
+							<Text fw={isUndefined(selection) ? "bold" : undefined}>
+								Explore
+							</Text>
 						}
 						onClick={deselect}
 					/>

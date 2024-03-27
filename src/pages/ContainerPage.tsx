@@ -54,7 +54,7 @@ export const ContainerPage: FC<{ container: WorkspaceContainer }> = observer(
 				<MyBreadcrumbs
 					data={[
 						{
-							id: "home",
+							id: "explore",
 							label: <VscCompass />,
 							onClick: () => deselect(),
 						},

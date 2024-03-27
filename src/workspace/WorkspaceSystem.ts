@@ -4,6 +4,7 @@ import {
 	WorkspaceContainerDto,
 	WorkspaceContainerVariant,
 } from "./WorkspaceContainer.ts";
+import { WorkspaceEntityStatus } from "./WorkspaceEntityStatus.ts";
 import { WorkspaceGroup } from "./WorkspaceGroup.ts";
 import { Repository } from "./repository.ts";
 import { ArrayOf } from "./types.ts";
@@ -13,6 +14,7 @@ export type WorkspaceSystemDto = {
 	name: string;
 	description: string;
 	group: string;
+	status?: WorkspaceEntityStatus;
 	containers: ArrayOf<WorkspaceContainerDto>;
 };
 
@@ -23,6 +25,8 @@ export class WorkspaceSystem {
 
 	description: string;
 
+	status: WorkspaceEntityStatus;
+
 	group: WorkspaceGroup;
 
 	containers: Repository<WorkspaceContainer>;
@@ -31,6 +35,7 @@ export class WorkspaceSystem {
 		id: string,
 		name: string,
 		description: string,
+		status: WorkspaceEntityStatus,
 		group: WorkspaceGroup,
 		containers = new Repository([]),
 	) {
@@ -39,6 +44,7 @@ export class WorkspaceSystem {
 		this.id = id;
 		this.name = name;
 		this.description = description;
+		this.status = status;
 		this.group = group;
 		this.containers = containers;
 	}
@@ -48,6 +54,7 @@ export class WorkspaceSystem {
 			id: this.id,
 			name: this.name,
 			description: this.description,
+			status: WorkspaceEntityStatus.ACTIVE,
 			group: this.group.id,
 			containers: this.containers.values().map((it) => it.toDto()),
 		};
@@ -58,6 +65,7 @@ export class WorkspaceSystem {
 			dto.id,
 			dto.name,
 			dto.description,
+			dto.status || WorkspaceEntityStatus.ACTIVE,
 			group,
 		);
 		const containers = dto.containers.map((dto) =>
@@ -77,6 +85,10 @@ export class WorkspaceSystem {
 
 	setGroup(group: WorkspaceGroup) {
 		this.group = group;
+	}
+
+	setStatus(status: WorkspaceEntityStatus) {
+		this.status = status;
 	}
 
 	addNewContainer(): WorkspaceContainer {

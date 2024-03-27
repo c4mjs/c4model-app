@@ -11,12 +11,16 @@ import { observer } from "mobx-react-lite";
 import { FC } from "react";
 import { VscAdd, VscCompass, VscLayers } from "react-icons/vsc";
 import { ContainerVariantIcon } from "../components/ContainerVariantIcon.tsx";
+import { EntityStatusBadge } from "../components/EntityStatusBadge.tsx";
+import { EntityStatusMenu } from "../components/EntityStatusMenu.tsx";
 import { MyBreadcrumbs } from "../components/MyBreadcrumbs.tsx";
 import { NameAndDescription } from "../components/NameAndDescription.tsx";
 import { PageShell } from "../components/PageShell.tsx";
+import { config } from "../config.ts";
 import { C4DiagramsPanel } from "../containers/C4DiagramsPanel.tsx";
 import { deselect, select } from "../hooks/useSelection.ts";
 import { useSystemOperations } from "../hooks/useSystemOperations.ts";
+import { WorkspaceEntityStatus } from "../workspace/WorkspaceEntityStatus.ts";
 import { WorkspaceSystem } from "../workspace/WorkspaceSystem.ts";
 
 export const SystemPage: FC<{ system: WorkspaceSystem }> = observer(
@@ -29,7 +33,7 @@ export const SystemPage: FC<{ system: WorkspaceSystem }> = observer(
 					<MyBreadcrumbs
 						data={[
 							{
-								id: "home",
+								id: "explore",
 								label: <VscCompass />,
 								onClick: deselect,
 							},
@@ -52,7 +56,17 @@ export const SystemPage: FC<{ system: WorkspaceSystem }> = observer(
 						icon={<VscLayers size={"1.5rem"} />}
 						onDelete={remove}
 						onMove={move}
+						withMenu={
+							<EntityStatusMenu
+								status={system.status}
+								onChange={(status) => system.setStatus(status)}
+							/>
+						}
+						color={config.entityStatusColors[system.status]}
 					/>
+					{system.status === WorkspaceEntityStatus.DEPRECATED && (
+						<EntityStatusBadge status={system.status} />
+					)}
 				</Stack>
 
 				<Tabs

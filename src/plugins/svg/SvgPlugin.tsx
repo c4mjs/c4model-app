@@ -54,6 +54,7 @@ export const SvgPlugin: React.FC<PluginProps<SvgPluginData>> = ({
 						src={`data:image/svg+xml;utf8,${encodeURIComponent(
 							fromBase64(data.svg),
 						)}`}
+						alt={"svg"}
 					/>
 				)}
 			</Stack>

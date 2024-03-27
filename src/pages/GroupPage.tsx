@@ -10,6 +10,7 @@ import {
 import { observer } from "mobx-react-lite";
 import { FC } from "react";
 import { VscAdd, VscCompass, VscOrganization } from "react-icons/vsc";
+import { EntityStatusBadge } from "../components/EntityStatusBadge.tsx";
 import { MyBreadcrumbs } from "../components/MyBreadcrumbs.tsx";
 import { NameAndDescription } from "../components/NameAndDescription.tsx";
 import { PageShell } from "../components/PageShell.tsx";
@@ -28,7 +29,7 @@ export const GroupPage: FC<{ group: WorkspaceGroup }> = observer(
 					<MyBreadcrumbs
 						data={[
 							{
-								id: "home",
+								id: "explore",
 								label: <VscCompass />,
 								onClick: deselect,
 							},
@@ -68,13 +69,20 @@ export const GroupPage: FC<{ group: WorkspaceGroup }> = observer(
 									w={"300px"}
 									h={"150px"}
 									onClick={() => select(system)}
-									styles={{ root: { cursor: "pointer" } }}
+									styles={{
+										root: {
+											cursor: "pointer",
+										},
+									}}
 								>
-									<Stack>
-										<Title size={"lg"} fw={"bold"}>
-											{system.name}
-										</Title>
-										<Text size={"xs"}>{system.description}</Text>
+									<Stack style={{ flex: "auto" }} justify={"space-between"}>
+										<Stack>
+											<Title size={"lg"} fw={"bold"}>
+												{system.name}
+											</Title>
+											<Text size={"xs"}>{system.description}</Text>
+										</Stack>
+										<EntityStatusBadge status={system.status} />
 									</Stack>
 								</Card>
 							))}
