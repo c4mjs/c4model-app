@@ -10,8 +10,10 @@
 			"systems": [
 				{
 					"id": "a88a6325-1287-4e83-86f2-c7f78e0e7576",
+					"variant": "INTERNAL",
 					"name": "Internet Banking System",
 					"description": "Allows customers to view information about their bank accounts, and make payments.",
+					"status": "ACTIVE",
 					"group": "ba95636f-25af-4a8c-92c8-95316014533b",
 					"containers": [
 						{
@@ -93,8 +95,10 @@
 				},
 				{
 					"id": "f40042c1-447c-433c-bd1f-e84df760941c",
+					"variant": "INTERNAL",
 					"name": "Mainframe Banking System",
 					"description": "Stores all of the core banking information about customers, accounts, transactions, etc.",
+					"status": "ACTIVE",
 					"group": "ba95636f-25af-4a8c-92c8-95316014533b",
 					"containers": [
 						{
@@ -110,8 +114,10 @@
 				},
 				{
 					"id": "cddecf0c-2910-442f-8ded-dfc1ed983595",
+					"variant": "INTERNAL",
 					"name": "E-mail System",
 					"description": "The internal Microsoft Exchange e-mail system.",
+					"status": "ACTIVE",
 					"group": "ba95636f-25af-4a8c-92c8-95316014533b",
 					"containers": [
 						{
@@ -138,8 +144,10 @@
 				},
 				{
 					"id": "90d847c6-c8f0-4c08-96c8-ea254c878288",
+					"variant": "INTERNAL",
 					"name": "Personal Banking Customers",
 					"description": "Views account balances, and makes payments using",
+					"status": "ACTIVE",
 					"group": "ba95636f-25af-4a8c-92c8-95316014533b",
 					"containers": [
 						{
@@ -171,63 +179,72 @@
 			"description": "Delivers to the customer's web browser",
 			"technology": "-",
 			"sender": "42328a5f-4046-40f9-a30f-99a2fbf76107",
-			"receiver": "20eb4154-38e2-466f-98b9-747e20844f32"
+			"receiver": "20eb4154-38e2-466f-98b9-747e20844f32",
+			"labels": []
 		},
 		{
 			"id": "26dabf0f-33b2-43c0-9df2-2c48bf4914a3",
 			"description": "Makes API calls to",
 			"technology": "JSON/HTTPS",
 			"sender": "20eb4154-38e2-466f-98b9-747e20844f32",
-			"receiver": "0eebe251-d309-4303-ac81-11838091705c"
+			"receiver": "0eebe251-d309-4303-ac81-11838091705c",
+			"labels": []
 		},
 		{
 			"id": "08490e0d-6666-415c-a1f8-17304c4f4ea9",
 			"description": "Makes API calls to",
 			"technology": "JSON/HTTPS",
 			"sender": "9324f234-c352-431b-857e-906069915d3d",
-			"receiver": "0eebe251-d309-4303-ac81-11838091705c"
+			"receiver": "0eebe251-d309-4303-ac81-11838091705c",
+			"labels": []
 		},
 		{
 			"id": "2dfab44f-b658-456e-8808-7895bea2a496",
 			"description": "Reads from and writes to",
 			"technology": "SQL/TCP",
 			"sender": "0eebe251-d309-4303-ac81-11838091705c",
-			"receiver": "c479f5cb-5200-43e5-96fc-3042305e88dd"
+			"receiver": "c479f5cb-5200-43e5-96fc-3042305e88dd",
+			"labels": []
 		},
 		{
 			"id": "20e0b01b-6939-4615-a2c3-065dbc16f715",
 			"description": "Makes API calls to",
 			"technology": "XML/HTTP",
 			"sender": "0eebe251-d309-4303-ac81-11838091705c",
-			"receiver": "8638e93f-f8d1-4522-9b3e-5f902cafaccc"
+			"receiver": "8638e93f-f8d1-4522-9b3e-5f902cafaccc",
+			"labels": []
 		},
 		{
 			"id": "d0e871bc-1d2d-4b37-bb75-077ddf125f41",
 			"description": "Sends e-mail using",
 			"technology": "SMTP",
 			"sender": "0eebe251-d309-4303-ac81-11838091705c",
-			"receiver": "fd9f37cd-20d6-4b74-bf3d-e09944074ddf"
+			"receiver": "fd9f37cd-20d6-4b74-bf3d-e09944074ddf",
+			"labels": []
 		},
 		{
 			"id": "7d847809-922a-440e-b9e3-eef4322b1224",
 			"description": "Visits bigbank.com/ib using",
 			"technology": "HTTPS",
 			"sender": "94cc3e64-9057-40b9-8283-671150730aac",
-			"receiver": "42328a5f-4046-40f9-a30f-99a2fbf76107"
+			"receiver": "42328a5f-4046-40f9-a30f-99a2fbf76107",
+			"labels": []
 		},
 		{
 			"id": "6247b354-b4d4-4a5a-9651-a1b4925d72ee",
 			"description": "Views account balances and makes payments using",
 			"technology": "-",
 			"sender": "94cc3e64-9057-40b9-8283-671150730aac",
-			"receiver": "20eb4154-38e2-466f-98b9-747e20844f32"
+			"receiver": "20eb4154-38e2-466f-98b9-747e20844f32",
+			"labels": []
 		},
 		{
 			"id": "d1e68d81-23ad-49a1-ad55-832928b3a3a0",
 			"description": "Views account balances, and makes payments using",
 			"technology": "-",
 			"sender": "9ba67658-78ae-47c4-962f-2045928fca39",
-			"receiver": "9324f234-c352-431b-857e-906069915d3d"
+			"receiver": "9324f234-c352-431b-857e-906069915d3d",
+			"labels": []
 		}
 	]
 }

@@ -8,6 +8,7 @@ export type WorkspaceRelationshipDto = {
 	receiver: string;
 	description: string;
 	technology: string;
+	labels?: string[];
 };
 
 export class WorkspaceRelationship {
@@ -21,12 +22,15 @@ export class WorkspaceRelationship {
 
 	technology: string;
 
+	labels: string[];
+
 	constructor(
 		id: string,
 		sender: WorkspaceContainer,
 		receiver: WorkspaceContainer,
 		description: string,
 		technology: string,
+		labels: string[],
 	) {
 		makeAutoObservable(this);
 
@@ -35,6 +39,7 @@ export class WorkspaceRelationship {
 		this.receiver = receiver;
 		this.description = description;
 		this.technology = technology;
+		this.labels = labels;
 	}
 
 	toDto(): WorkspaceRelationshipDto {
@@ -44,6 +49,7 @@ export class WorkspaceRelationship {
 			technology: this.technology,
 			sender: this.sender.id,
 			receiver: this.receiver.id,
+			labels: this.labels,
 		};
 	}
 
@@ -54,6 +60,7 @@ export class WorkspaceRelationship {
 			workspace.getContainer(dto.receiver),
 			dto.description,
 			dto.technology,
+			dto.labels || [],
 		);
 	}
 
@@ -71,5 +78,9 @@ export class WorkspaceRelationship {
 
 	setTechnology(technology: string) {
 		this.technology = technology;
+	}
+
+	setLabels(labels: string[]) {
+		this.labels = labels;
 	}
 }

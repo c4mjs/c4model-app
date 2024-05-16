@@ -1,5 +1,10 @@
 import { makeAutoObservable } from "mobx";
-import { WorkspaceSystem, WorkspaceSystemDto } from "./WorkspaceSystem.ts";
+import { WorkspaceEntityStatus } from "./WorkspaceEntityStatus.ts";
+import {
+	WorkspaceSystem,
+	WorkspaceSystemDto,
+	WorkspaceSystemVariant,
+} from "./WorkspaceSystem.ts";
 import { Repository } from "./repository.ts";
 import { ArrayOf } from "./types.ts";
 
@@ -63,8 +68,10 @@ export class WorkspaceGroup {
 		return this.systems.upsert(
 			new WorkspaceSystem(
 				crypto.randomUUID(),
+				WorkspaceSystemVariant.INTERNAL,
 				"System name",
 				"Description of the software system.",
+				WorkspaceEntityStatus.ACTIVE,
 				this,
 			),
 		);

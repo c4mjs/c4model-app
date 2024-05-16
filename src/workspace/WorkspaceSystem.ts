@@ -9,8 +9,14 @@ import { WorkspaceGroup } from "./WorkspaceGroup.ts";
 import { Repository } from "./repository.ts";
 import { ArrayOf } from "./types.ts";
 
+export enum WorkspaceSystemVariant {
+	INTERNAL = "INTERNAL",
+	EXTERNAL = "EXTERNAL",
+}
+
 export type WorkspaceSystemDto = {
 	id: string;
+	variant: WorkspaceSystemVariant;
 	name: string;
 	description: string;
 	group: string;
@@ -20,6 +26,8 @@ export type WorkspaceSystemDto = {
 
 export class WorkspaceSystem {
 	readonly id: string;
+
+	variant: WorkspaceSystemVariant;
 
 	name: string;
 
@@ -33,6 +41,7 @@ export class WorkspaceSystem {
 
 	constructor(
 		id: string,
+		variant: WorkspaceSystemVariant,
 		name: string,
 		description: string,
 		status: WorkspaceEntityStatus,
@@ -42,6 +51,7 @@ export class WorkspaceSystem {
 		makeAutoObservable(this);
 
 		this.id = id;
+		this.variant = variant;
 		this.name = name;
 		this.description = description;
 		this.status = status;
@@ -52,9 +62,10 @@ export class WorkspaceSystem {
 	toDto(): WorkspaceSystemDto {
 		return {
 			id: this.id,
+			variant: this.variant,
 			name: this.name,
 			description: this.description,
-			status: WorkspaceEntityStatus.ACTIVE,
+			status: this.status,
 			group: this.group.id,
 			containers: this.containers.values().map((it) => it.toDto()),
 		};
@@ -63,6 +74,7 @@ export class WorkspaceSystem {
 	static fromDto(dto: WorkspaceSystemDto, group: WorkspaceGroup) {
 		const system = new WorkspaceSystem(
 			dto.id,
+			dto.variant || WorkspaceSystemVariant.INTERNAL,
 			dto.name,
 			dto.description,
 			dto.status || WorkspaceEntityStatus.ACTIVE,
@@ -73,6 +85,10 @@ export class WorkspaceSystem {
 		);
 		system.containers.bulkUpsert(containers);
 		return system;
+	}
+
+	setVariant(variant: WorkspaceSystemVariant) {
+		this.variant = variant;
 	}
 
 	setName(name: string) {

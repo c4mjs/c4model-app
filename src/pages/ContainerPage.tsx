@@ -123,6 +123,7 @@ export const ContainerPage: FC<{ container: WorkspaceContainer }> = observer(
 									</ActionIcon>
 								</Group>
 								<RelationshipsTable
+									availableLabels={workspace.labels}
 									relationships={workspace.getApplicableRelationships(
 										container,
 									)}

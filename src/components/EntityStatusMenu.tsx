@@ -28,7 +28,6 @@ export const EntityStatusMenu: React.FC<SystemStatusProps> = ({
 					color={config.entityStatusColors[k as WorkspaceEntityStatus]}
 					leftSection={<EntityStatusIcon status={k as WorkspaceEntityStatus} />}
 					onClick={() => onChange(k as WorkspaceEntityStatus)}
-					bg={status === k ? "gray" : undefined}
 				>
 					<Text fw={status === k ? "bold" : undefined}>{v}</Text>
 				</Menu.Item>

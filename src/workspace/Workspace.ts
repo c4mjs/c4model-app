@@ -1,3 +1,4 @@
+import { uniq } from "lodash";
 import { makeAutoObservable } from "mobx";
 import { createContext, useContext } from "react";
 import { WorkspaceContainer } from "./WorkspaceContainer.ts";
@@ -33,6 +34,10 @@ export class Workspace {
 
 	relationships: Repository<WorkspaceRelationship>;
 
+	explorerFilters: string[];
+
+	explorerLabels: string[];
+
 	get systems(): WorkspaceSystem[] {
 		return this.groups.values().flatMap((it) => it.systems.values());
 	}
@@ -41,6 +46,10 @@ export class Workspace {
 		return this.groups
 			.values()
 			.flatMap((g) => g.systems.values().flatMap((s) => s.containers.values()));
+	}
+
+	get labels(): string[] {
+		return uniq(this.relationships.values().flatMap((it) => it.labels));
 	}
 
 	constructor(
@@ -56,6 +65,8 @@ export class Workspace {
 		this.name = name;
 		this.groups = groups;
 		this.relationships = relationships;
+		this.explorerFilters = [];
+		this.explorerLabels = [];
 	}
 
 	toDto(): WorkspaceDto {
@@ -141,6 +152,7 @@ export class Workspace {
 				receiver,
 				"e.g. Makes API calls",
 				"e.g. JSON/HTTP",
+				[],
 			),
 		);
 	}
@@ -196,6 +208,14 @@ export class Workspace {
 		container.setSystem(newSystem);
 		newSystem.containers.upsert(container);
 		currentSystem.containers.delete(container.id);
+	}
+
+	setExplorerFilters(filters: string[]) {
+		this.explorerFilters = filters;
+	}
+
+	setExplorerLabels(labels: string[]) {
+		this.explorerLabels = labels;
 	}
 }
 

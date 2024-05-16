@@ -1,4 +1,4 @@
-import _, { isUndefined } from "lodash";
+import _, { isEmpty, isUndefined } from "lodash";
 import { useMemo } from "react";
 import {
 	C4Dependency,
@@ -10,8 +10,9 @@ import {
 } from "../@C4Workspace/C4Diagram.ts";
 import { findAllByIds } from "../utils/findAllByIds.ts";
 import { useWorkspace } from "../workspace/Workspace.ts";
+import { WorkspaceSystemVariant } from "../workspace/WorkspaceSystem.ts";
 
-export const useSystemDiagram = (systemIds?: string[]) => {
+export const useSystemDiagram = (systemIds?: string[], labels?: string[]) => {
 	const workspace = useWorkspace();
 
 	return useMemo(() => {
@@ -28,6 +29,10 @@ export const useSystemDiagram = (systemIds?: string[]) => {
 				(it) =>
 					systemContainerIds.includes(it.sender.id) ||
 					systemContainerIds.includes(it.receiver.id),
+			)
+			.filter(
+				(it) =>
+					isEmpty(labels) || it.labels.some((label) => labels?.includes(label)),
 			);
 
 		const containersInScope = findAllByIds(
@@ -58,7 +63,9 @@ export const useSystemDiagram = (systemIds?: string[]) => {
 					it.id,
 					it.name,
 					diagram.getNodeGroup(it.group.id),
-					C4NodeType.SYSTEM,
+					it.variant === WorkspaceSystemVariant.INTERNAL
+						? C4NodeType.SYSTEM
+						: C4NodeType.SYSTEMEXT,
 					{ description: it.description, status: it.status },
 				),
 		);
@@ -92,5 +99,11 @@ export const useSystemDiagram = (systemIds?: string[]) => {
 		diagram.addDependencies(deps);
 
 		return diagram;
-	}, [workspace.containers, workspace.systems, workspace.relationships]);
+	}, [
+		workspace.containers,
+		workspace.systems,
+		workspace.relationships,
+		systemIds,
+		labels,
+	]);
 };

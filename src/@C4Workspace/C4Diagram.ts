@@ -7,6 +7,7 @@ import { NODE_BASE_HEIGHT, NODE_WIDTH, graphConfig } from "./config.ts";
 export enum C4NodeType {
 	CONTAINER = "CONTAINER",
 	SYSTEM = "SYSTEM",
+	SYSTEMEXT = "SYSTEMEXT",
 }
 
 export enum C4NodeGroupType {

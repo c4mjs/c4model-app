@@ -10,6 +10,7 @@ import { C4Node, C4NodeType, useC4Diagram } from "./C4Diagram.ts";
 const backgroundColors: Record<C4NodeType, string> = {
 	[C4NodeType.CONTAINER]: "#4FA0D4",
 	[C4NodeType.SYSTEM]: "#2D5FAA",
+	[C4NodeType.SYSTEMEXT]: "#8B8495",
 };
 
 export type MyNodeProps = {
@@ -32,15 +33,9 @@ export const MyNode: React.FC<MyNodeProps> = ({ data }) => {
 					},
 				}}
 			>
-				<Stack
-					gap={0}
-					h={"100%"}
-					align={"center"}
-					justify={"center"}
-					styles={{ root: { textAlign: "center" } }}
-				>
+				<Stack gap={0} h={"100%"} align={"start"} justify={"start"}>
 					<ActionIcon
-						styles={{ root: { position: "fixed", top: 10, right: 10 } }}
+						styles={{ root: { position: "absolute", top: 5, right: 5 } }}
 						variant={"transparent"}
 						color={"white"}
 						onClick={() => diagram.nodeSelection$.next(my)}
@@ -51,7 +46,12 @@ export const MyNode: React.FC<MyNodeProps> = ({ data }) => {
 						{my.name}
 					</Text>
 					{match(my.type)
-						.with(C4NodeType.SYSTEM, () => <Text>[Software System]</Text>)
+						.with(C4NodeType.SYSTEM, () => (
+							<Text size={"xs"}>[Software System]</Text>
+						))
+						.with(C4NodeType.SYSTEMEXT, () => (
+							<Text size={"xs"}>[Software System]</Text>
+						))
 						.with(C4NodeType.CONTAINER, () => (
 							<Text size={"xs"}>[Container: {my.meta.technology}]</Text>
 						))
@@ -64,6 +64,12 @@ export const MyNode: React.FC<MyNodeProps> = ({ data }) => {
 					{my.meta.status && (
 						<EntityStatusBadge
 							status={my.meta.status as WorkspaceEntityStatus}
+							variant={"filled"}
+							radius={"xs"}
+							style={{
+								position: "absolute",
+								bottom: 10,
+							}}
 						/>
 					)}
 				</Stack>

@@ -16,6 +16,7 @@ import { EntityStatusMenu } from "../components/EntityStatusMenu.tsx";
 import { MyBreadcrumbs } from "../components/MyBreadcrumbs.tsx";
 import { NameAndDescription } from "../components/NameAndDescription.tsx";
 import { PageShell } from "../components/PageShell.tsx";
+import { SystemVariantMenu } from "../components/SystemVariantMenu.tsx";
 import { config } from "../config.ts";
 import { C4DiagramsPanel } from "../containers/C4DiagramsPanel.tsx";
 import { deselect, select } from "../hooks/useSelection.ts";
@@ -57,10 +58,16 @@ export const SystemPage: FC<{ system: WorkspaceSystem }> = observer(
 						onDelete={remove}
 						onMove={move}
 						withMenu={
-							<EntityStatusMenu
-								status={system.status}
-								onChange={(status) => system.setStatus(status)}
-							/>
+							<>
+								<SystemVariantMenu
+									variant={system.variant}
+									onChange={(variant) => system.setVariant(variant)}
+								/>
+								<EntityStatusMenu
+									status={system.status}
+									onChange={(status) => system.setStatus(status)}
+								/>
+							</>
 						}
 						color={config.entityStatusColors[system.status]}
 					/>

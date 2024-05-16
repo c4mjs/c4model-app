@@ -1,4 +1,4 @@
-import _ from "lodash";
+import _, { isEmpty } from "lodash";
 import { useMemo } from "react";
 import {
 	C4Dependency,
@@ -11,7 +11,10 @@ import {
 import { findAllByIds } from "../utils/findAllByIds.ts";
 import { useWorkspace } from "../workspace/Workspace.ts";
 
-export const useContainerDiagram = (systemIds?: string[]) => {
+export const useContainerDiagram = (
+	systemIds?: string[],
+	labels?: string[],
+) => {
 	const workspace = useWorkspace();
 
 	return useMemo(() => {
@@ -28,6 +31,10 @@ export const useContainerDiagram = (systemIds?: string[]) => {
 				(it) =>
 					systemContainerIds.includes(it.sender.id) ||
 					systemContainerIds.includes(it.receiver.id),
+			)
+			.filter(
+				(it) =>
+					isEmpty(labels) || it.labels.some((label) => labels?.includes(label)),
 			);
 
 		const containersInScope = findAllByIds(
@@ -71,5 +78,11 @@ export const useContainerDiagram = (systemIds?: string[]) => {
 		diagram.addDependencies(deps);
 
 		return diagram;
-	}, [workspace.containers, workspace.systems, workspace.relationships]);
+	}, [
+		workspace.containers,
+		workspace.systems,
+		workspace.relationships,
+		systemIds,
+		labels,
+	]);
 };
